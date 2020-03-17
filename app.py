@@ -1,7 +1,7 @@
 from flask import Flask
 from flask import render_template
 
-app = Flask(__name__, static_folder='static')
+app = Flask(__name__)
 
 
 @app.route('/')
@@ -11,7 +11,7 @@ def auth():
 
 @app.route('/admin')
 def admin():
-    return 'None'
+    return render_template('admin.html', page_title='Admin Page')
 
 
 if __name__ == '__main__':

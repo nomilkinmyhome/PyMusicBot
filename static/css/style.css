@@ -70,6 +70,39 @@ a:hover {
     color: #ff9d3c;
     cursor: pointer;
 }
+.menu>a, .menu>a:visited {
+    display: inline-block;
+    font-variant: all-small-caps;
+    font-size: 20px;
+    color: #ff9d3c;
+    line-height: 1;
+    text-decoration: none;
+    cursor: pointer;
+}
+.menu>a:before {
+    content: "| ";
+}
+.menu>a:after {
+    display: flex;
+    flex-direction: column;
+    content: "";
+    height: 2px;
+    width: 0;
+    background-color: #ff9d3c;
+    transition: width .3s ease-in-out;
+}
+.menu>a:hover:after,
+.menu>a:focus:after {
+    width: 100%;
+}
+.content {
+    display: flex;
+    flex-direction: column;
+    margin: 5% auto;
+    border: 2px solid #ff9d3c;
+    border-radius: 12px;
+    width: 40%;
+}
 footer {
     display: flex;
     flex-direction: row;

@@ -1,18 +1,15 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    <div class="container">
-        <h1>PyMusicBot</h1>
-        <div class="row">
-            <div class="auth">
+    <div class="row">
+        <div class="auth">
             <h2>Log in</h2>
-                <hr color="#ff9d3c">
-                <form action="" method="POST">
-                    <input type="text" name="login" placeholder="Login" value="" required>
-                    <input type="password" name="password" placeholder="Password" value="" required>
-                    <input type="submit" id="sign_in" name="sign_in" value="Sign in!">
-                </form>
-            </div>
+            <hr color="#ff9d3c">
+            <form action="" method="POST">
+                <input type="text" name="login" placeholder="Login" value="" required>
+                <input type="password" name="password" placeholder="Password" value="" required>
+                <input type="submit" id="sign_in" name="sign_in" value="Sign in!">
+            </form>
         </div>
     </div>
 {% endblock %}
