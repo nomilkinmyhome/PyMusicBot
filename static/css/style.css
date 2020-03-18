@@ -108,6 +108,9 @@ a:hover {
     border-radius: 12px;
     width: 40%;
 }
+.content-text li {
+    margin-bottom: 5px;
+}
 footer {
     display: flex;
     flex-direction: row;

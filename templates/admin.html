@@ -3,13 +3,23 @@
 {% block content %}
     <div class="row">
         <div class="menu">
-            <a href="#">music list</a>
-            <a href="#">add music</a>
-            <a href="#">update music</a>
-            <a href="#">delete music</a>
+            <a href="{{ url_for('admin', slug='list') }}">music list</a>
+            <a href="{{ url_for('admin', slug='add') }}">add music</a>
+            <a href="{{ url_for('admin', slug='update') }}">update music</a>
+            <a href="{{ url_for('admin', slug='delete') }}">delete music</a>
         </div>
         <div class="content">
-            <p>Some information</p>
+            <h2>{{ context.content_title }}</h2>
+            <hr color="#ff9d3c">
+            <div class="content-text">
+                {% if context.content_title == 'Music list' %}
+                    <ol>
+                    {% for music in context.music_list %}
+                        <li>{{ music.title }}</li>
+                    {% endfor %}
+                    </ol>
+                {% endif %}
+            </div>
         </div>
     </div>
 {% endblock %}
