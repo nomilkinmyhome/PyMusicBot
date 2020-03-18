@@ -56,6 +56,7 @@ input[type=text], input[type=password] {
     border-radius: 5px;
     width: 100px;
     height: 30px;
+    transition: background-color 0.5s linear, color 0.5s linear;
 }
 #sign_in:hover {
     color: #fff;
@@ -82,12 +83,16 @@ a:hover {
 .menu>a:before {
     content: "| ";
 }
+.menu>a:first-child:before {
+    content: " ";
+}
 .menu>a:after {
     display: flex;
     flex-direction: column;
     content: "";
     height: 2px;
     width: 0;
+    margin-top: 5px;
     background-color: #ff9d3c;
     transition: width .3s ease-in-out;
 }
