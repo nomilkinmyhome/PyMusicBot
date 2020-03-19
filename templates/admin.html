@@ -12,7 +12,7 @@
             <h2>{{ context.content_title }}</h2>
             <hr color="#ff9d3c">
             <div class="content-text">
-                {% if context.content_title == 'Music list' %}
+                {% if request.view_args['slug'] == 'list' %}
                     <ol>
                     {% for music in context.music_list %}
                         <li>{{ music.title }}</li>
