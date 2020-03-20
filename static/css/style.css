@@ -38,6 +38,11 @@ form {
     flex-direction: column;
     align-items: center;
 }
+#search_form {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
 input[type=text], input[type=password] {
     outline: none;
     border-radius: 12px;
@@ -58,10 +63,21 @@ input[type=text], input[type=password] {
     height: 30px;
     transition: background-color 0.5s linear, color 0.5s linear;
 }
-#sign_in:hover {
+#sign_in:hover, #search:hover {
     color: #fff;
     background-color: #ff9d3c;
     cursor: pointer;
+}
+#search {
+    font-size: 13px;
+    font-weight: bold;
+    color: #ff9d3c;
+    background-color: #fff;
+    border: 2px solid #ff9d3c;
+    border-radius: 5px;
+    width: 85px;
+    height: 30px;
+    transition: background-color 0.5s linear, color 0.5s linear;
 }
 a, a:visited {
     color: #000;

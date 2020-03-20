@@ -2,6 +2,7 @@ from app import app
 from models import Music
 
 from flask import render_template
+from flask import request
 
 
 @app.route('/')
@@ -15,7 +16,12 @@ def auth():
 def admin(slug):
     if slug == 'list':
         content_title = 'Music list'
-        music_list = Music.query.all()
+
+        search = request.args.get('search')
+        if search:
+            music_list = Music.query.filter(Music.title.contains(search)).all()
+        else:
+            music_list = Music.query.all()
     else:
         content_title = f'{slug.title()} music'
         music_list = ''

@@ -12,6 +12,10 @@
             <h2>{{ context.content_title }}</h2>
             <hr color="#ff9d3c">
             <div class="content-text">
+                <form action="" method="GET" id="search_form">
+                    <input type="text" name="search" placeholder="Search" value="{{ request.args.get('search', '') }}">
+                    <input type="submit" id="search" value="Search!">
+                </form>
                 {% if request.view_args['slug'] == 'list' %}
                     <ol>
                     {% for music in context.music_list %}
