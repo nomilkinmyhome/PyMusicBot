@@ -3,25 +3,36 @@
 {% block content %}
     <div class="row">
         <div class="menu">
-            <a href="{{ url_for('admin', slug='list') }}">music list</a>
-            <a href="{{ url_for('admin', slug='add') }}">add music</a>
-            <a href="{{ url_for('admin', slug='update') }}">update music</a>
-            <a href="{{ url_for('admin', slug='delete') }}">delete music</a>
+            <a href="{{ url_for('admin_music_list') }}">music list</a>
+            <a href="{{ url_for('admin_add_music') }}">add music</a>
+            <a href="{{ url_for('admin_update_music') }}">update music</a>
+            <a href="{{ url_for('admin_delete_music') }}">delete music</a>
         </div>
         <div class="content">
             <h2>{{ context.content_title }}</h2>
             <hr color="#ff9d3c">
             <div class="content-text">
-                <form action="" method="GET" id="search_form">
-                    <input type="text" name="search" placeholder="Search" value="{{ request.args.get('search', '') }}">
-                    <input type="submit" id="search" value="Search!">
-                </form>
-                {% if request.view_args['slug'] == 'list' %}
+                {% if request.path == '/admin/list' %}
+                    <form action="" method="GET" id="search_form">
+                        <input type="text" name="search" placeholder="Search" value="{{ request.args.get('search', '') }}">
+                        <input type="submit" id="search" value="Search!">
+                    </form>
                     <ol>
                     {% for music in context.music_list %}
                         <li>{{ music.title }}</li>
                     {% endfor %}
                     </ol>
+                {% elif request.path == '/admin/add' %}
+                    <form action="{{ url_for('admin_add_music') }}" method="POST" enctype="multipart/form-data" id="upload_form">
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+                        {% for field in context.add_music_form %}
+                            {% if field.name == 'music' %}
+                                {{ field.label(class='upload_button_label') }}
+                            {% endif %}
+                            {{ field() }}
+                        {% endfor %}
+                        <input type="submit" value="Upload!" class="upload_button_label">
+                    </form>
                 {% endif %}
             </div>
         </div>
