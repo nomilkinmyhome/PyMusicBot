@@ -18,15 +18,24 @@ def auth():
 def admin_music_list():
     content_title = 'Music list'
 
+    current_page = request.args.get('page')
+    if current_page and current_page.isdigit():
+        current_page = int(current_page)
+    else:
+        current_page = 1
+
     search = request.args.get('search')
     if search:
-        music_list = Music.query.filter(Music.title.ilike(f'%{search}%')).all()
+        music_list = Music.query.filter(Music.title.ilike(f'%{search}%'))
     else:
         music_list = Music.query.order_by(Music.pub_date.desc())
 
+    pages = music_list.paginate(page=current_page, per_page=10)
+
     context = {'page_title': 'Admin Page',
                'content_title': content_title,
-               'music_list': music_list}
+               'search': search,
+               'pages': pages}
 
     return render_template('admin.html', context=context)
 

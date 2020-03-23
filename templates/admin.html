@@ -18,10 +18,24 @@
                         <input type="submit" id="search" value="Search!">
                     </form>
                     <ol>
-                    {% for music in context.music_list %}
+                    {% for music in context.pages.items %}
                         <li>{{ music.title }}</li>
                     {% endfor %}
                     </ol>
+                    <nav>
+                        <ul class="pagination">
+                        {% if context.search %}{% set search='&search=%s' % context.search %}{% endif %}
+                            {% if context.pages.has_prev %} <li><a href="./list?page={{ context.pages.prev_num }}{{ search }}" class="disabled">&laquo;</a></li> {% endif %}
+                            {% for page in context.pages.iter_pages(left_edge=2, left_current=2, right_current=5, right_edge=2) %}
+                                {% if page %}
+                                    <li><a href="./list?page={{ page }}{{ search }}" {% if context.pages.page == page %} class="active" {% else %} class="disabled" {% endif %}>{{ page }}</a></li>
+                                {% else %}
+                                    <span id=ellipsis>...</span>
+                                {% endif %}
+                            {% endfor %}
+                            {% if context.pages.has_next %} <li><a href="./list?page={{ context.pages.next_num }}{{ search }}" class="disabled">&raquo;</a></li> {% endif %}
+                        </ul>
+                    </nav>
                 {% elif request.path == '/admin/add' %}
                     <form action="{{ url_for('admin_add_music') }}" method="POST" enctype="multipart/form-data" id="upload_form">
                         <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
