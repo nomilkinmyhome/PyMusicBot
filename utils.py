@@ -8,11 +8,9 @@ from werkzeug.utils import secure_filename, escape
 
 
 class SecureMusicSave:
-    """Class for secure saving music files to the DB and media/ directory
-
-    :param **kwargs: must contain 'music_title', 'music_file' and 'url_root'
-    """
+    """Class for secure saving music files to the DB and media/ directory"""
     def __init__(self, **kwargs) -> None:
+        """:param kwargs: must contain 'music_title', 'music_file' and 'url_root'"""
         self.music_title = kwargs['music_title']
         self.music_file = kwargs['music_file']
 

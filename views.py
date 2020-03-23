@@ -20,7 +20,7 @@ def admin_music_list():
 
     search = request.args.get('search')
     if search:
-        music_list = Music.query.filter(Music.title.contains(search)).all()
+        music_list = Music.query.filter(Music.title.ilike(f'%{search}%')).all()
     else:
         music_list = Music.query.order_by(Music.pub_date.desc())
 
