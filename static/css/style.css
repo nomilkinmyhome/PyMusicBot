@@ -38,7 +38,7 @@ form {
     flex-direction: column;
     align-items: center;
 }
-#search_form, #upload_form {
+#search_form, .inline_form {
     display: flex;
     flex-direction: row;
     justify-content: center;
@@ -63,7 +63,7 @@ input[type=text], input[type=password] {
     height: 30px;
     transition: background-color 0.5s linear, color 0.5s linear;
 }
-#sign_in:hover, #search:hover, .upload_button_label:hover {
+#sign_in:hover, #search:hover, .button_labels:hover {
     color: #fff;
     background-color: #ff9d3c;
     cursor: pointer;
@@ -82,7 +82,7 @@ input[type=text], input[type=password] {
 #upload_button {
     display: none;
 }
-.upload_button_label {
+.button_labels {
     display: flex;
     align-items: inherit;
     justify-content: space-around;
@@ -146,6 +146,9 @@ a:hover {
 .content-text li {
     margin-bottom: 5px;
 }
+.music_list_element {
+    cursor: pointer;
+}
 .pagination {
     display: flex;
     flex-direction: row;
@@ -177,6 +180,9 @@ a:hover {
     flex-direction: row;
     align-items: center;
     padding: 3px;
+}
+.small_inputs {
+    width: 150px;
 }
 footer {
     display: flex;

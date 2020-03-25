@@ -5,7 +5,7 @@
         <div class="menu">
             <a href="{{ url_for('admin_music_list') }}">music list</a>
             <a href="{{ url_for('admin_add_music') }}">add music</a>
-            <a href="{{ url_for('admin_update_music') }}">update music</a>
+            <a href="{{ url_for('admin_edit_music') }}">edit music</a>
             <a href="{{ url_for('admin_delete_music') }}">delete music</a>
         </div>
         <div class="content">
@@ -19,7 +19,7 @@
                     </form>
                     <ol>
                     {% for music in context.pages.items %}
-                        <li>{{ music.title }}</li>
+                        <li title="ID: {{ music.id }}" class="music_list_element">{{ music.title }}</li>
                     {% endfor %}
                     </ol>
                     <nav>
@@ -37,15 +37,31 @@
                         </ul>
                     </nav>
                 {% elif request.path == '/admin/add' %}
-                    <form action="{{ url_for('admin_add_music') }}" method="POST" enctype="multipart/form-data" id="upload_form">
+                    <form action="{{ url_for('admin_add_music') }}" method="POST" enctype="multipart/form-data" class="inline_form">
                         <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
                         {% for field in context.add_music_form %}
                             {% if field.name == 'music' %}
-                                {{ field.label(class='upload_button_label') }}
+                                {{ field.label(class='button_labels') }}
                             {% endif %}
                             {{ field() }}
                         {% endfor %}
-                        <input type="submit" value="Upload!" class="upload_button_label">
+                        <input type="submit" value="Upload!" class="button_labels">
+                    </form>
+                {% elif request.path == '/admin/edit' %}
+                    <form action="{{ url_for('admin_edit_music') }}" method="POST" class="inline_form">
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+                        {% for field in context.edit_music_form %}
+                            {{ field(class='small_inputs') }}
+                        {% endfor %}
+                        <input type="submit" value="Edit!" class="button_labels">
+                    </form>
+                {% elif request.path == '/admin/delete' %}
+                    <form action="{{ url_for('admin_delete_music') }}" method="POST" class="inline_form">
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+                        {% for field in context.delete_music_form %}
+                            {{ field() }}
+                        {% endfor %}
+                        <input type="submit" value="Delete!" class="button_labels">
                     </form>
                 {% endif %}
             </div>

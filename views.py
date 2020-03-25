@@ -1,7 +1,7 @@
 from app import app
 from models import Music
-from forms import AddMusicForm
-from utils import SecureMusicSave
+from forms import AddMusicForm, EditMusicForm, DeleteMusicForm, AuthForm
+from utils import SecureMusicCRUD
 
 from flask import render_template, request, redirect, url_for
 from werkzeug.exceptions import BadRequestKeyError
@@ -9,7 +9,8 @@ from werkzeug.exceptions import BadRequestKeyError
 
 @app.route('/')
 def auth():
-    context = {'page_title': 'Log in'}
+    context = {'page_title': 'Log in',
+               'auth_form': AuthForm()}
 
     return render_template('auth.html', context=context)
 
@@ -44,13 +45,12 @@ def admin_music_list():
 def admin_add_music():
     if request.method == 'POST':
         try:
-            music_title = request.form['title']
+            new_music_title = request.form['title']
             music_file = request.files['music']
 
-            secure_save = SecureMusicSave(**{'music_title': music_title,
-                                             'music_file': music_file,
+            secure_save = SecureMusicCRUD(**{'new_music_title': new_music_title,
                                              'url_root': request.url_root})
-            if secure_save.save_to_dir() and secure_save.save_to_db():
+            if secure_save.save_to_dir(music_file) and secure_save.save_to_db():
                 return redirect(url_for('admin_music_list'))
         except BadRequestKeyError:
             pass
@@ -64,12 +64,23 @@ def admin_add_music():
     return render_template('admin.html', context=context)
 
 
-@app.route('/admin/update', methods=['GET', 'POST'])
-def admin_update_music():
-    content_title = 'Update music'
+@app.route('/admin/edit', methods=['GET', 'POST'])
+def admin_edit_music():
+    if request.method == 'POST':
+        music_id = request.form['id']
+        new_music_title = request.form['title']
+        old_music_title = Music.query.filter(Music.id == music_id).first().title
+
+        secure_edit_music = SecureMusicCRUD(**{'new_music_title': new_music_title,
+                                               'url_root': request.url_root})
+        if secure_edit_music.rename_music_file_in_dir(old_music_title) and secure_edit_music.edit_music_in_db(music_id):
+            return redirect(url_for('admin_music_list'))
+
+    content_title = 'Edit music'
 
     context = {'page_title': 'Admin Page',
-               'content_title': content_title, }
+               'content_title': content_title,
+               'edit_music_form': EditMusicForm()}
 
     return render_template('admin.html', context=context)
 
@@ -79,6 +90,7 @@ def admin_delete_music():
     content_title = 'Delete music'
 
     context = {'page_title': 'Admin Page',
-               'content_title': content_title, }
+               'content_title': content_title,
+               'delete_music_form': DeleteMusicForm()}
 
     return render_template('admin.html', context=context)
