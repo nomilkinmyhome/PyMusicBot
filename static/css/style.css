@@ -9,10 +9,22 @@ body {
     line-height: 1.6;
     color: #ff9d3c;
 }
+input {
+    outline: none;
+}
 .container {
     width: 100%;
     max-width: 1200px;
     margin: 0 auto;
+}
+header {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+}
+#logout {
+    color: #ff9d3c;
 }
 .row {
     width: 100%;
@@ -44,7 +56,6 @@ form {
     justify-content: center;
 }
 input[type=text], input[type=password] {
-    outline: none;
     border-radius: 12px;
     border: 2px solid #ff9d3c;
     color: #ff9d3c;

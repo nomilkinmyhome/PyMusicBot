@@ -4,18 +4,37 @@ from forms import AddMusicForm, EditMusicForm, DeleteMusicForm, AuthForm
 from utils import SecureMusicCRUD
 
 from flask import render_template, request, redirect, url_for
+from flask_login import current_user, login_user, login_required, logout_user
+from models import User
 from werkzeug.exceptions import BadRequestKeyError
 
 
-@app.route('/')
+@app.route('/', methods=['GET', 'POST'])
 def auth():
+    if request.method == 'POST':
+        user = User.query.filter_by(name=request.form['login']).first()
+        if user is not None and user.check_password(request.form['password']):
+            login_user(user, remember=True)
+            return redirect(url_for('admin_music_list'))
+
+    if current_user.is_authenticated:
+        return redirect(url_for('admin_music_list'))
+
     context = {'page_title': 'Log in',
                'auth_form': AuthForm()}
 
     return render_template('auth.html', context=context)
 
 
+@app.route('/admin/logout')
+@login_required
+def logout():
+    logout_user()
+    return redirect(url_for('auth'))
+
+
 @app.route('/admin/list')
+@login_required
 def admin_music_list():
     content_title = 'Music list'
 
@@ -42,6 +61,7 @@ def admin_music_list():
 
 
 @app.route('/admin/add', methods=['GET', 'POST'])
+@login_required
 def admin_add_music():
     if request.method == 'POST':
         try:
@@ -65,6 +85,7 @@ def admin_add_music():
 
 
 @app.route('/admin/edit', methods=['GET', 'POST'])
+@login_required
 def admin_edit_music():
     if request.method == 'POST':
         music_id = request.form['id']
@@ -86,6 +107,7 @@ def admin_edit_music():
 
 
 @app.route('/admin/delete', methods=['GET', 'POST'])
+@login_required
 def admin_delete_music():
     if request.method == 'POST':
         music_id = request.form['id']
