@@ -7,7 +7,7 @@
             <hr color="#ff9d3c">
             <form action="" method="POST">
                 <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
-                {% for field in context.auth_form %}
+                {% for field in auth_form %}
                     {{ field() }}
                 {% endfor %}
                 <input type="submit" id="sign_in" name="sign_in" value="Sign in!">
