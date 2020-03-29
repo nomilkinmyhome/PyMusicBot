@@ -24,16 +24,16 @@
                     </ol>
                     <nav>
                         <ul class="pagination">
-                        {% if search %}{% set search='&search=%s' % search %}{% endif %}
-                            {% if pages.has_prev %} <li><a href="./list?page={{ pages.prev_num }}{{ search }}" class="disabled">&laquo;</a></li> {% endif %}
+                        {% if search %}{% set local_search='&search=%s' % search %}{% endif %}
+                            {% if pages.has_prev %} <li><a href="./list?page={{ pages.prev_num }}{{ local_search }}" class="disabled">&laquo;</a></li> {% endif %}
                             {% for page in pages.iter_pages(left_edge=2, left_current=2, right_current=5, right_edge=2) %}
                                 {% if page %}
-                                    <li><a href="./list?page={{ page }}{{ search }}" {% if pages.page == page %} class="active" {% else %} class="disabled" {% endif %}>{{ page }}</a></li>
+                                    <li><a href="./list?page={{ page }}{{ local_search }}" {% if pages.page == page %} class="active" {% else %} class="disabled" {% endif %}>{{ page }}</a></li>
                                 {% else %}
                                     <span id=ellipsis>...</span>
                                 {% endif %}
                             {% endfor %}
-                            {% if pages.has_next %} <li><a href="./list?page={{ pages.next_num }}{{ search }}" class="disabled">&raquo;</a></li> {% endif %}
+                            {% if pages.has_next %} <li><a href="./list?page={{ pages.next_num }}{{ local_search }}" class="disabled">&raquo;</a></li> {% endif %}
                         </ul>
                     </nav>
                 {% elif request.path == '/admin/add' %}
