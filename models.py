@@ -27,7 +27,7 @@ def load_user(id):
 
 class Music(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    title = db.Column(db.String(140), nullable=False)
+    title = db.Column(db.String(45), nullable=False)
     url = db.Column(URLType, nullable=False)
     pub_date = db.Column(db.DateTime, default=datetime.now)
 

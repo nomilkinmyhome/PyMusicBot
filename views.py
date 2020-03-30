@@ -14,6 +14,7 @@ from typing import Union, Dict
 
 class BasePage(MethodView):
     """Interface for all pages of the site"""
+
     decorators: list = [login_required]
 
     template: str = 'admin.html'
@@ -37,6 +38,7 @@ class BasePage(MethodView):
 
 class Auth(BasePage):
     """Auth page"""
+
     decorators: list = []
 
     template: str = 'auth.html'
@@ -72,7 +74,9 @@ class Logout(View):
 
 class MusicList(BasePage):
     """Music list page"""
-    def get_search(self) -> Union[None, str]:
+
+    @staticmethod
+    def get_search() -> Union[None, str]:
         return request.args.get('search')
 
     def get_pages(self) -> Pagination:
@@ -109,6 +113,7 @@ class MusicList(BasePage):
 
 class AddMusic(BasePage):
     """Music adding page"""
+
     def post(self) -> redirect:
         try:
             music_title: str = request.form['title']
@@ -130,7 +135,8 @@ class AddMusic(BasePage):
 
 class EditMusic(BasePage):
     """Music editing page"""
-    def post(self) -> redirect:
+
+    def post(self) -> Union[redirect, None]:
         music_id: str = request.form['id']
         music_title: str = request.form['title']
         old_music_title: BaseQuery = Music.query.filter(Music.id == music_id).first().title
@@ -149,7 +155,8 @@ class EditMusic(BasePage):
 
 class DeleteMusic(BasePage):
     """Music deletion page"""
-    def post(self) -> redirect:
+
+    def post(self) -> Union[redirect, None]:
         music_id: str = request.form['id']
         music_title: BaseQuery = Music.query.filter(Music.id == music_id).first().title
 

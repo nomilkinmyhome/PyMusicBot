@@ -26,24 +26,18 @@ class SecureMusicCRUD:
             self.media_root_url: str = f'{kwargs["url_root"]}{self.media_root}/'
 
         if 'music_title' in kwargs:
-            self.music_title = kwargs['music_title']
-
-            self.__get_clean_music_title()
+            self.music_title = escape(kwargs['music_title'])
             self.__get_correct_music_title()
 
-    def __get_clean_music_title(self) -> None:
-        self.music_title: str = escape(self.music_title)
-        self.music_title: str = secure_filename(self.music_title)
-
     def __get_correct_music_title(self) -> None:
-        if not self.music_title:
+        if not self.music_title or len(self.music_title) > 45:
             self.music_title = 'Unknown - Unknown.mp3'
 
         if not re.search(r'^.+\.mp3$', self.music_title):
             self.music_title: str = f'{self.music_title}.mp3'
 
     def save_to_dir(self, music_file) -> bool:
-        music_file.save(f'{self.media_root}/{self.music_title}')
+        music_file.save(f'{self.media_root}/{secure_filename(self.music_title)}')
 
         return True
 
@@ -58,8 +52,9 @@ class SecureMusicCRUD:
             return False
 
     def rename_music_file_in_dir(self, old_music_title) -> bool:
-        if os.path.exists(f'{self.media_root}/{old_music_title}'):
-            os.rename(f'{self.media_root}/{old_music_title}', f'{self.media_root}/{self.music_title}')
+        path_to_music = f'{self.media_root}/{secure_filename(old_music_title)}'
+        if os.path.exists(path_to_music):
+            os.rename(path_to_music, f'{self.media_root}/{secure_filename(self.music_title)}')
 
             return True
         else:
@@ -69,7 +64,7 @@ class SecureMusicCRUD:
         try:
             music = Music.query.filter_by(id=music_id).first()
             music.title = self.music_title
-            music.url = f'{self.media_root_url}{self.music_title}'
+            music.url = f'{self.media_root_url}{secure_filename(self.music_title)}'
 
             db.session.commit()
 
@@ -78,8 +73,9 @@ class SecureMusicCRUD:
             return False
 
     def delete_music_file_from_dir(self) -> bool:
-        if os.path.exists(f'{self.media_root}/{self.music_title}'):
-            os.remove(f'{self.media_root}/{self.music_title}')
+        path_to_music = f'{self.media_root}/{secure_filename(self.music_title)}'
+        if os.path.exists(path_to_music):
+            os.remove(path_to_music)
 
             return True
         else:
