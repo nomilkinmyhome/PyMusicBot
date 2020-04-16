@@ -50,7 +50,7 @@ form {
     flex-direction: column;
     align-items: center;
 }
-#search_form, .inline_form {
+.inline_form {
     display: flex;
     flex-direction: row;
     justify-content: center;
@@ -194,6 +194,19 @@ a:hover {
 }
 .small_inputs {
     width: 150px;
+}
+.errors {
+    color: #ff0000;
+    font-size: 14px;
+    margin-top: 15px;
+}
+.content-text {
+    padding: 5px;
+}
+.text {
+    margin: 0;
+    padding: 0;
+    font-weight: bold;
 }
 footer {
     display: flex;

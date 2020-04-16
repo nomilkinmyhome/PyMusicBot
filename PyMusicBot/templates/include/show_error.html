@@ -1,0 +1,7 @@
+{% with errors = get_flashed_messages() %}
+    {% if errors %}
+        {% for error in errors %}
+            <span class="errors">{{ error }}</span>
+        {% endfor %}
+    {% endif %}
+{% endwith %}

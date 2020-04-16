@@ -1,0 +1,12 @@
+{% extends 'extends/admin.html' %}
+
+{% block page_content %}
+    <form action="{{ url_for('admin_delete_music') }}" method="POST" class="inline_form">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+        {% for field in delete_music_form %}
+            {{ field() }}
+        {% endfor %}
+        <input type="submit" value="Delete!" class="button_labels">
+    </form>
+    {% include 'include/show_error.html' %}
+{% endblock %}

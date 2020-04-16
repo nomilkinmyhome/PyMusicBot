@@ -1,0 +1,30 @@
+{% extends 'extends/base.html' %}
+
+{% block content %}
+    <div class="row">
+        <div class="auth">
+            <h2>Log in</h2>
+            <hr color="#ff9d3c">
+            <form action="" method="POST">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+                {% for field in auth_form %}
+                    {{ field() }}
+                    {% for error in field.errors %}
+                        <span style="color: red;">[{{ error }}]</span>
+                    {% endfor %}
+                {% endfor %}
+                {% if auth_form.errors %}
+                    <ul class="errors">
+                        {% for field_name, field_errors in auth_form.errors|dictsort if field_errors %}
+                            {% for error in field_errors %}
+                                <li>{{ auth_form[field_name].label }}: {{ error }}</li>
+                            {% endfor %}
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+                <input type="submit" id="sign_in" name="sign_in" value="Sign in!">
+            </form>
+        {% include 'include/show_error.html' %}
+        </div>
+    </div>
+{% endblock %}

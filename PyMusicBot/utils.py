@@ -43,7 +43,7 @@ class SecureMusicCRUD:
 
     def save_to_db(self) -> bool:
         try:
-            music = Music(title=self.music_title, url=f'{self.media_root_url}{self.music_title}')
+            music = Music(title=self.music_title, url=f'{self.media_root_url}{secure_filename(self.music_title)}')
             db.session.add(music)
             db.session.commit()
 

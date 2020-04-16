@@ -1,0 +1,15 @@
+{% extends 'extends/admin.html' %}
+
+{% block page_content %}
+    <form action="{{ url_for('admin_add_music') }}" method="POST" enctype="multipart/form-data" class="inline_form">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+        {% for field in add_music_form %}
+            {% if field.name == 'music' %}
+                {{ field.label(class='button_labels') }}
+            {% endif %}
+            {{ field() }}
+        {% endfor %}
+        <input type="submit" value="Upload!" class="button_labels">
+    </form>
+    {% include 'include/show_error.html' %}
+{% endblock %}

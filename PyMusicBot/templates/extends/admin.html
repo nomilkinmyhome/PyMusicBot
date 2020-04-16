@@ -1,0 +1,20 @@
+{% extends 'extends/base.html' %}
+
+{% block content %}
+    <div class="row">
+        <div class="menu">
+            <a href="{{ url_for('admin_music_list') }}">music list</a>
+            <a href="{{ url_for('admin_add_music') }}">add music</a>
+            <a href="{{ url_for('admin_edit_music') }}">edit music</a>
+            <a href="{{ url_for('admin_delete_music') }}">delete music</a>
+        </div>
+        <div class="content">
+            <h2>{{ content_title }}</h2>
+            <hr color="#ff9d3c">
+            <div class="content-text">
+                {% block page_content %}
+                {% endblock %}
+            </div>
+        </div>
+    </div>
+{% endblock %}

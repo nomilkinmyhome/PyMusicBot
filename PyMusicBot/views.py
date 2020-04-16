@@ -1,8 +1,10 @@
+import re
+
 from models import Music, User
 from forms import AddMusicForm, EditMusicForm, DeleteMusicForm, AuthForm
 from utils import SecureMusicCRUD
 
-from flask import render_template, request, redirect, url_for
+from flask import render_template, request, redirect, url_for, flash
 from flask_login import current_user, login_user, login_required, logout_user
 from flask.views import View, MethodView
 
@@ -17,7 +19,7 @@ class BasePage(MethodView):
 
     decorators: list = [login_required]
 
-    template: str = 'admin.html'
+    template: str = 'music_list.html'
 
     def get(self) -> Union[redirect, render_template]:
         context: dict = self.get_context()
@@ -50,11 +52,18 @@ class Auth(BasePage):
         return self.render_template(self.get_context())
 
     def post(self) -> redirect:
-        user = User.query.filter_by(name=request.form['login']).first()
-        if user is not None and user.check_password(request.form['password']):
-            login_user(user, remember=True)
-
-            return redirect(url_for('admin_music_list'))
+        form = AuthForm(request.form)
+        if form.validate():
+            user = User.query.filter_by(name=request.form['login']).first()
+            if user is not None and user.check_password(request.form['password']):
+                login_user(user, remember=True)
+                return redirect(url_for('admin_music_list'))
+            else:
+                flash('Incorrect login or password!')
+                return redirect(url_for('auth'))
+        else:
+            flash('Incorrect data!')
+            return redirect(url_for('auth'))
 
     def get_context(self) -> Dict[str, Union[str, AuthForm]]:
         context: Dict[str, Union[str, AuthForm]] = {'page_title': 'Log in',
@@ -74,6 +83,8 @@ class Logout(View):
 
 class MusicList(BasePage):
     """Music list page"""
+
+    decorators = [login_required]
 
     @staticmethod
     def get_search() -> Union[None, str]:
@@ -114,17 +125,29 @@ class MusicList(BasePage):
 class AddMusic(BasePage):
     """Music adding page"""
 
-    def post(self) -> redirect:
-        try:
-            music_title: str = request.form['title']
-            music_file: FileStorage = request.files['music']
+    decorators = [login_required]
+    template: str = 'add_music.html'
 
-            secure_save = SecureMusicCRUD(**{'music_title': music_title,
-                                             'url_root': request.url_root})
-            if secure_save.save_to_dir(music_file) and secure_save.save_to_db():
-                return redirect(url_for('admin_music_list'))
-        except BadRequestKeyError:
-            pass
+    def post(self) -> redirect:
+        form = AddMusicForm(request.files)
+        if re.search(r'\.mp3$', form.music.data.filename) and form.music.data.mimetype == 'audio/mpeg':
+            print(form.music.data.content_length)
+            try:
+                music_title: str = request.form['title']
+                music_file: FileStorage = request.files['music']
+
+                secure_save = SecureMusicCRUD(**{'music_title': music_title,
+                                                 'url_root': request.url_root})
+                if secure_save.save_to_dir(music_file) and secure_save.save_to_db():
+                    return redirect(url_for('admin_music_list'))
+                else:
+                    flash('Server error!')
+                    return redirect(url_for('admin_add_music'))
+            except BadRequestKeyError:
+                pass
+        else:
+            flash('The music file must be .mp3!')
+            return redirect(url_for('admin_add_music'))
 
     def get_context(self) -> Dict[str, Union[str, AddMusicForm]]:
         context: Dict[str, Union[str, AddMusicForm]] = {'content_title': 'Add music',
@@ -136,15 +159,25 @@ class AddMusic(BasePage):
 class EditMusic(BasePage):
     """Music editing page"""
 
-    def post(self) -> Union[redirect, None]:
-        music_id: str = request.form['id']
-        music_title: str = request.form['title']
-        old_music_title: BaseQuery = Music.query.filter(Music.id == music_id).first().title
+    template: str = 'edit_music.html'
 
-        secure_edit_music = SecureMusicCRUD(**{'music_title': music_title,
-                                               'url_root': request.url_root})
-        if secure_edit_music.rename_music_file_in_dir(old_music_title) and secure_edit_music.edit_music_in_db(music_id):
-            return redirect(url_for('admin_music_list'))
+    def post(self) -> Union[redirect, None]:
+        form = EditMusicForm(request.form)
+        if form.validate():
+            music_id: str = request.form['id']
+            music_title: str = request.form['title']
+            old_music_title: BaseQuery = Music.query.filter(Music.id == music_id).first().title
+
+            secure_edit_music = SecureMusicCRUD(**{'music_title': music_title,
+                                                   'url_root': request.url_root})
+            if secure_edit_music.rename_music_file_in_dir(old_music_title) and secure_edit_music.edit_music_in_db(music_id):
+                return redirect(url_for('admin_music_list'))
+            else:
+                flash('Server error!')
+                return redirect(url_for('admin_edit_music'))
+        else:
+            flash('Incorrect data!')
+            return redirect(url_for('admin_edit_music'))
 
     def get_context(self) -> Dict[str, Union[str, EditMusicForm]]:
         context: Dict[str, Union[str, EditMusicForm]] = {'content_title': 'Edit music',
@@ -156,13 +189,23 @@ class EditMusic(BasePage):
 class DeleteMusic(BasePage):
     """Music deletion page"""
 
-    def post(self) -> Union[redirect, None]:
-        music_id: str = request.form['id']
-        music_title: BaseQuery = Music.query.filter(Music.id == music_id).first().title
+    template: str = 'delete_music.html'
 
-        secure_delete_music = SecureMusicCRUD(**{'music_title': music_title})
-        if secure_delete_music.delete_music_file_from_dir() and secure_delete_music.delete_music_from_db(music_id):
-            return redirect(url_for('admin_music_list'))
+    def post(self) -> redirect:
+        form = DeleteMusicForm(request.form)
+        if form.validate():
+            music_id: str = request.form['id']
+            music_title: BaseQuery = Music.query.filter(Music.id == music_id).first().title
+
+            secure_delete_music = SecureMusicCRUD(**{'music_title': music_title})
+            if secure_delete_music.delete_music_file_from_dir() and secure_delete_music.delete_music_from_db(music_id):
+                return redirect(url_for('admin_music_list'))
+            else:
+                flash('Server error!')
+                return redirect(url_for('admin_delete_music'))
+        else:
+            flash('Incorrect ID!')
+            return redirect(url_for('admin_delete_music'))
 
     def get_context(self) -> Dict[str, Union[str, DeleteMusicForm]]:
         context: Dict[str, Union[str, DeleteMusicForm]] = {'content_title': 'Delete music',

@@ -1,0 +1,30 @@
+{% extends 'extends/admin.html' %}
+
+{% block page_content %}
+    <form action="" method="GET" class="inline_form">
+        <input type="text" name="search" placeholder="Search" value="{{ request.args.get('search', '') }}">
+        <input type="submit" id="search" value="Search!">
+    </form>
+    <ol>
+        {% for music in pages.items %}
+            <li title="ID: {{ music.id }}" class="music_list_element">{{ music.title }}</li>
+        {% endfor %}
+    </ol>
+    {% if not pages.items %}
+        <span class="text">0 results</span>
+    {% endif %}
+    <nav>
+        <ul class="pagination">
+            {% if search %}{% set local_search='&search=%s' % search %}{% endif %}
+            {% if pages.has_prev %} <li><a href="./list?page={{ pages.prev_num }}{{ local_search }}" class="disabled">&laquo;</a></li> {% endif %}
+            {% for page in pages.iter_pages(left_edge=2, left_current=2, right_current=5, right_edge=2) %}
+                {% if page %}
+                    <li><a href="./list?page={{ page }}{{ local_search }}" {% if pages.page == page %} class="active" {% else %} class="disabled" {% endif %}>{{ page }}</a></li>
+                {% else %}
+                    <span id=ellipsis>...</span>
+                {% endif %}
+            {% endfor %}
+            {% if pages.has_next %} <li><a href="./list?page={{ pages.next_num }}{{ local_search }}" class="disabled">&raquo;</a></li> {% endif %}
+        </ul>
+    </nav>
+{% endblock %}
