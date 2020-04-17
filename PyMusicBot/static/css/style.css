@@ -223,3 +223,38 @@ img {
     width: 35px;
     margin-right: 15px;
 }
+@media (max-width: 700px) {
+    .auth {
+        width: 80%;
+        margin: 10%;
+    }
+    header {
+        justify-content: space-around;
+    }
+    header > h1 {
+        font-size: 25px;
+    }
+    .row {
+        margin-top: 5%;
+    }
+}
+@media (min-width: 701px) and (max-width: 980px) {
+    .auth {
+        width: 55%;
+        margin: 10% auto;
+    }
+    header {
+        margin: 2%;
+    }
+}
+@media (min-width: 981px) and (max-width: 1200px) {
+    .auth {
+        margin: 5% auto;
+    }
+    .row {
+        margin-top: 4%;
+    }
+    header {
+        justify-content: space-around;
+    }
+}
