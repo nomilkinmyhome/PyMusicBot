@@ -131,13 +131,11 @@ class AddMusic(BasePage):
     def post(self) -> redirect:
         form = AddMusicForm(request.files)
         if re.search(r'\.mp3$', form.music.data.filename) and form.music.data.mimetype == 'audio/mpeg':
-            print(form.music.data.content_length)
             try:
                 music_title: str = request.form['title']
                 music_file: FileStorage = request.files['music']
 
-                secure_save = SecureMusicCRUD(**{'music_title': music_title,
-                                                 'url_root': request.url_root})
+                secure_save = SecureMusicCRUD(**{'music_title': music_title})
                 if secure_save.save_to_dir(music_file) and secure_save.save_to_db():
                     return redirect(url_for('admin_music_list'))
                 else:
@@ -168,8 +166,7 @@ class EditMusic(BasePage):
             music_title: str = request.form['title']
             old_music_title: BaseQuery = Music.query.filter(Music.id == music_id).first().title
 
-            secure_edit_music = SecureMusicCRUD(**{'music_title': music_title,
-                                                   'url_root': request.url_root})
+            secure_edit_music = SecureMusicCRUD(**{'music_title': music_title})
             if secure_edit_music.rename_music_file_in_dir(old_music_title) and secure_edit_music.edit_music_in_db(music_id):
                 return redirect(url_for('admin_music_list'))
             else:

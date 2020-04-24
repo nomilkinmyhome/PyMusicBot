@@ -4,3 +4,4 @@ venv/
 migrations/
 media/
 settings.cfg
+.env

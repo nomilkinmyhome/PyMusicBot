@@ -14,16 +14,11 @@ class SecureMusicCRUD:
     Note: CRUD - Create, Read, Update, Delete."""
     def __init__(self, **kwargs) -> None:
         """
-        :param kwargs['url_root']: request.url_root object
         :param kwargs['music_title']: title of music
 
         :var self.media_root: media/ directory
-        :var self.media_root_url: absolutely URL to media/ directory
         """
         self.media_root: str = 'media'
-
-        if 'url_root' in kwargs:
-            self.media_root_url: str = f'{kwargs["url_root"]}{self.media_root}/'
 
         if 'music_title' in kwargs:
             self.music_title = escape(kwargs['music_title'])
@@ -43,7 +38,7 @@ class SecureMusicCRUD:
 
     def save_to_db(self) -> bool:
         try:
-            music = Music(title=self.music_title, url=f'{self.media_root_url}{secure_filename(self.music_title)}')
+            music = Music(title=self.music_title, path_to_file=f'{self.media_root}/{secure_filename(self.music_title)}')
             db.session.add(music)
             db.session.commit()
 
@@ -64,7 +59,7 @@ class SecureMusicCRUD:
         try:
             music = Music.query.filter_by(id=music_id).first()
             music.title = self.music_title
-            music.url = f'{self.media_root_url}{secure_filename(self.music_title)}'
+            music.path_to_file = f'{self.media_root}/{secure_filename(self.music_title)}'
 
             db.session.commit()
 
