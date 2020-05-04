@@ -28,4 +28,4 @@ Telegram bot with admin panel on flask for sending music
 5. Set the value of the env variable "PyMusicBot_SETTINGS" to "settings.cfg", then run create_admin.py.  
 6. Run start.sh for admin panel or telegram_bot/bot.py
 
-#####Your login in admin panel - root, password - toor
+**Your login in admin panel - root, password - toor**
