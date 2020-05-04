@@ -16,7 +16,7 @@ class User(UserMixin, db.Model):
         return check_password_hash(self.password_hash, password)
 
     def __repr__(self):
-        return f'<user: {self.name}; id: {self.id}>'
+        return f'<User: {self.name}; ID: {self.id}>'
 
 
 @login_manager.user_loader
@@ -31,4 +31,4 @@ class Music(db.Model):
     pub_date = db.Column(db.DateTime, default=datetime.now)
 
     def __repr__(self):
-        return f'<Music id: {self.id}, title: {self.title}>'
+        return f'<Music ID: {self.id}, title: {self.title}>'

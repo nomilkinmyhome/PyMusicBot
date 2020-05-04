@@ -47,7 +47,7 @@ async def send_selected_music(callback_query: types.CallbackQuery):
     await send_music(callback_query.from_user.id, callback_query.data)
 
 
-async def send_music(chat_id, path_to_music):
+async def send_music(chat_id: str, path_to_music: str):
     try:
         music: types.InputFile = types.InputFile(f'../{path_to_music}')
 

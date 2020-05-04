@@ -3,5 +3,9 @@ if ! [ -d media/ ]
 fi
 
 if ! [ -f settings.cfg ]
-  then echo -e "ENV='development'\nDEBUG=True\n\nSECRET_KEY=''\nMAX_CONTENT_LENGTH=32*1024*1024\n\nPOSTGRES_URL='127.0.0.1:5432'\nPOSTGRES_USER='music_bot_user'\nPOSTGRES_PW='1'\nPOSTGRES_DB='music_bot'\nSQLALCHEMY_DATABASE_URI = f'postgresql+psycopg2://{POSTGRES_USER}:{POSTGRES_PW}@{POSTGRES_URL}/{POSTGRES_DB}'\nSQLALCHEMY_TRACK_MODIFICATIONS=False" >> settings.cfg
+  then echo -e "ENV='development'\nDEBUG=True\nSECRET_KEY=''\nMAX_CONTENT_LENGTH=32*1024*1024\nPOSTGRES_URL='127.0.0.1:5432'\nPOSTGRES_USER=''\nPOSTGRES_PW=''\nPOSTGRES_DB=''\nSQLALCHEMY_DATABASE_URI = f'postgresql+psycopg2://{POSTGRES_USER}:{POSTGRES_PW}@{POSTGRES_URL}/{POSTGRES_DB}'\nSQLALCHEMY_TRACK_MODIFICATIONS=False\n" >> settings.cfg
+fi
+
+if ! [ -f telegram_bot/.env ]
+  then echo -e "TELEGRAM_BOT_TOKEN=''\nPOSTGRES_HOST='localhost'\nPOSTGRES_PORT=5432\nPOSTGRES_USER=''\nPOSTGRES_PW=''\nPOSTGRES_DB=''" >> telegram_bot/.env
 fi
