@@ -20,6 +20,5 @@ login_manager = LoginManager()
 login_manager.init_app(app)
 
 cache = Cache(app, config={
-    'CACHE_TYPE': 'redis',
-    'CACHE_REDIS_URL': 'redis://localhost:6379/0',
+    'CACHE_TYPE': 'simple',
 })
