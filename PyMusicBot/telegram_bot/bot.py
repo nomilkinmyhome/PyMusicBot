@@ -6,12 +6,12 @@ from typing import Union
 
 from aiogram import Bot, Dispatcher, executor, types
 
-
 if os.path.exists('.env'):
     load_dotenv('.env')
 
     from telegram_bot.keyboards import get_keyboard_with_music_list
     from telegram_bot.database import get_music
+    from telegram_bot.common import clear_music_title
 
     token: str = os.environ.get('TELEGRAM_BOT_TOKEN')
 else:
@@ -29,7 +29,8 @@ async def start_message(message: types.Message):
 
 @dp.message_handler()
 async def get_music_title(message: types.Message):
-    music_list: list = await get_music_list(message.text)
+    music_title = await clear_music_title(message.text)
+    music_list: list = await get_music_list(music_title)
 
     if music_list:
         if len(music_list) == 1:
@@ -68,4 +69,4 @@ async def get_music_list(music_title: str) -> Union[list, None]:
 
 
 if __name__ == '__main__':
-    executor.start_polling(dp, skip_updates=True)
+    executor.start_polling(dp)
