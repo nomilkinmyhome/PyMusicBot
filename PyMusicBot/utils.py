@@ -22,9 +22,9 @@ class SecureMusicCRUD:
 
         if 'music_title' in kwargs:
             self.music_title = escape(kwargs['music_title'])
-            self.__get_correct_music_title()
+            self._get_correct_music_title()
 
-    def __get_correct_music_title(self) -> None:
+    def _get_correct_music_title(self) -> None:
         if not self.music_title or len(self.music_title) > 45:
             self.music_title = 'Unknown - Unknown.mp3'
 

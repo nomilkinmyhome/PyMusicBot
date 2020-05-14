@@ -24,15 +24,15 @@ dp = Dispatcher(bot)
 
 @dp.message_handler(commands=['start'])
 async def start_message(message: types.Message):
-    await message.answer('Hello! Send me the name of a song')
+    await message.answer('Hello! Send me the name of the song')
 
 
 @dp.message_handler()
 async def get_music_title(message: types.Message):
-    music_title = await clear_music_title(message.text)
-    music_list: list = await get_music_list(music_title)
+    clean_music_title: str = await clear_music_title(message.text)
+    music_list: list = await get_music_list(clean_music_title)
 
-    if music_list:
+    if clean_music_title and music_list:
         if len(music_list) == 1:
             await send_music(message.from_user.id, music_list[0]['path_to_file'])
         else:

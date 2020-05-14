@@ -150,6 +150,7 @@ a:hover {
     display: flex;
     flex-direction: column;
     margin: 5% auto;
+    padding-top: 1%;
     border: 2px solid #ff9d3c;
     border-radius: 12px;
     width: 40%;
