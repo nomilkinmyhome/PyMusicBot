@@ -1,0 +1,1 @@
+PyMusicBot_SETTINGS=settings.cfg pytest
