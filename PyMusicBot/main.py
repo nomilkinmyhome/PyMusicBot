@@ -1,7 +1,8 @@
 from app import app
 import views
-import routes
+from routes import init_routes
 
 
 if __name__ == '__main__':
+    init_routes(app)
     app.run()

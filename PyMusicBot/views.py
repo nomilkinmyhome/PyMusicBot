@@ -1,8 +1,13 @@
 import re
 
-from models import Music, User
-from forms import AddMusicForm, EditMusicForm, DeleteMusicForm, AuthForm
-from utils import SecureMusicCRUD
+try:
+    from models import Music, User
+    from forms import AddMusicForm, EditMusicForm, DeleteMusicForm, AuthForm
+    from utils import SecureMusicCRUD
+except ImportError:
+    from PyMusicBot.models import Music, User
+    from PyMusicBot.forms import AddMusicForm, EditMusicForm, DeleteMusicForm, AuthForm
+    from PyMusicBot.utils import SecureMusicCRUD
 
 from flask import render_template, request, redirect, url_for, flash
 from flask_login import current_user, login_user, login_required, logout_user
