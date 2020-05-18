@@ -1,7 +1,4 @@
-try:
-    from views import Auth, Logout, MusicList, AddMusic, EditMusic, DeleteMusic
-except ImportError:
-    from PyMusicBot.views import Auth, Logout, MusicList, AddMusic, EditMusic, DeleteMusic
+from PyMusicBot.views import Auth, Logout, MusicList, AddMusic, EditMusic, DeleteMusic
 
 
 def init_routes(app):

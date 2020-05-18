@@ -1,7 +1,4 @@
-try:
-    from app import db, login_manager
-except ImportError:
-    from PyMusicBot.app import db, login_manager
+from PyMusicBot import db, login_manager
 
 from datetime import datetime
 from flask_login import UserMixin

@@ -1,6 +1,6 @@
-from app import app
-import views
-from routes import init_routes
+from PyMusicBot import app
+import PyMusicBot.views
+from PyMusicBot.routes import init_routes
 
 
 if __name__ == '__main__':

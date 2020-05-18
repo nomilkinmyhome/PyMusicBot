@@ -1,6 +1,6 @@
 import pytest
 
-from PyMusicBot.app import app, db
+from PyMusicBot import app, db
 from PyMusicBot.models import User
 from PyMusicBot.routes import init_routes
 

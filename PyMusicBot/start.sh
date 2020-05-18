@@ -1,1 +1,0 @@
-PyMusicBot_SETTINGS=settings.cfg python3.8 main.py

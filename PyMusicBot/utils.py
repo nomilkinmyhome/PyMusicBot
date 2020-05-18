@@ -1,12 +1,8 @@
 import re
 import os
 
-try:
-    from app import db
-    from models import Music
-except ImportError:
-    from PyMusicBot.app import db
-    from PyMusicBot.models import Music
+from PyMusicBot import db
+from PyMusicBot.models import Music
 
 from sqlalchemy.exc import SQLAlchemyError
 from werkzeug.utils import secure_filename, escape

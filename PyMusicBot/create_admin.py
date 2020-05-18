@@ -1,5 +1,5 @@
-from app import db
-from models import User
+from PyMusicBot import db
+from PyMusicBot.models import User
 
 
 new_admin = User(name='root')
