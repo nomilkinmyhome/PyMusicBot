@@ -1,4 +1,4 @@
-from PyMusicBot import db, login_manager
+from PyMusicBot import db
 
 from datetime import datetime
 from flask_login import UserMixin
@@ -32,11 +32,6 @@ class User(UserMixin, db.Model):
 
     def __repr__(self):
         return f'<User: {self.name}; ID: {self.id}>'
-
-
-@login_manager.user_loader
-def load_user(id):
-    return User.query.get(int(id))
 
 
 class Music(db.Model):

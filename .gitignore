@@ -4,4 +4,5 @@ venv/
 migrations/
 media/
 settings.cfg
+test_settings.cfg
 .env

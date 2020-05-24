@@ -6,19 +6,40 @@ from flask_script import Manager
 from flask_login import LoginManager
 from flask_caching import Cache
 
-app = Flask(__name__)
-app.config.from_envvar('PyMusicBot_SETTINGS')
 
-csrf = CSRFProtect(app)
+db = SQLAlchemy()
+login_manager = LoginManager()
 
-db = SQLAlchemy(app)
-migrate = Migrate(app, db)
+
+def create_app(*args, **kwargs):
+    app = Flask(__name__)
+    app.config.from_envvar('PyMusicBot_SETTINGS')
+
+    init_extensions(app, *args, **kwargs)
+
+    return app
+
+
+def init_extensions(app, test_mode=False):
+    db.init_app(app)
+    login_manager.init_app(app)
+
+    from PyMusicBot.models import User
+
+    @login_manager.user_loader
+    def load_user(id):
+        return User.query.get(int(id))
+
+    Cache(app, config={
+        'CACHE_TYPE': 'simple',
+    })
+
+    if not test_mode:
+        CSRFProtect(app)
+
+
+app = create_app()
+
+Migrate(app, db)
 manager = Manager(app)
 manager.add_command('db', MigrateCommand)
-
-login_manager = LoginManager()
-login_manager.init_app(app)
-
-cache = Cache(app, config={
-    'CACHE_TYPE': 'simple',
-})

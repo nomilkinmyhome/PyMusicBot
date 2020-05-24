@@ -6,7 +6,7 @@
             <h2>Log in</h2>
             <hr color="#ff9d3c">
             <form action="" method="POST">
-                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+                {% if csrf_token %}<input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>{% endif %}
                 {% for field in auth_form %}
                     {{ field() }}
                     {% for error in field.errors %}

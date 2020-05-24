@@ -2,7 +2,7 @@
 
 {% block page_content %}
     <form action="{{ url_for('admin_delete_music') }}" method="POST" class="inline_form">
-        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+        {% if csrf_token %}<input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>{% endif %}
         {% for field in delete_music_form %}
             {{ field() }}
         {% endfor %}

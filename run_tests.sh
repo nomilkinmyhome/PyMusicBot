@@ -1,1 +1,1 @@
-PyMusicBot_SETTINGS=settings.cfg pytest
+PyMusicBot_SETTINGS=test_settings.cfg pytest --setup-show
