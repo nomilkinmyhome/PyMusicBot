@@ -12,7 +12,7 @@ class TestAuthPage:
         assert b'PyMusicBot' in response.data
         assert b'Log in' in response.data
 
-    def test_incorrect_user_auth(self, test_client, init_database):
+    def test_incorrect_user_auth(self, test_client):
         response = AuthorizationController.login(test_client, 'nonexistent_user', 'very_bad_password')
 
         assert response.status_code == 200
@@ -20,7 +20,7 @@ class TestAuthPage:
         assert b'Incorrect login or password!' in response.data
         assert b'Admin Page' not in response.data
 
-    def test_correct_user_auth(self, test_client, init_database):
+    def test_correct_user_auth(self, test_client):
         response = AuthorizationController.login(test_client, 'user1', 'very_bad_password')
 
         assert response.status_code == 200
@@ -31,19 +31,19 @@ class TestAuthPage:
 
 
 class TestAdminPagesAccess:
-    _urls = ['/admin/list',
+    _urls = ('/admin/list',
              '/admin/add',
              '/admin/edit',
-             '/admin/delete']
+             '/admin/delete')
 
     @pytest.mark.parametrize('url', _urls)
-    def test_authorized_access(self, test_client, init_database, url):
+    def test_authorized_access(self, test_client, url):
         response = test_client.get(url)
 
         assert response.status_code == 200
 
     @pytest.mark.parametrize('url', _urls)
-    def test_unautorized_access(self, test_client, init_database, url):
+    def test_unautorized_access(self, test_client, url):
         AuthorizationController.logout(test_client)
 
         response = test_client.get(url)
