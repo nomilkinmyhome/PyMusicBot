@@ -19,7 +19,7 @@ def drop_db():
     db.drop_all()
 
 
-@pytest.fixture(scope='module')
+@pytest.fixture()
 def test_client():
     app = create_app(test_mode=True)
     init_routes(app)
