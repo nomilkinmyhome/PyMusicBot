@@ -130,22 +130,24 @@ class AddMusic(BasePage):
 
     def post(self) -> redirect:
         form = AddMusicForm(request.files)
-        if re.search(r'\.mp3$', form.music.data.filename) and form.music.data.mimetype == 'audio/mpeg':
-            try:
-                music_title: str = request.form['title']
-                music_file: FileStorage = request.files['music']
+        if form.music.data and form.music.data:
+            if re.search(r'\.mp3$', form.music.data.filename) and form.music.data.mimetype == 'audio/mpeg':
+                try:
+                    music_title: str = request.form['title']
+                    music_file: FileStorage = request.files['music']
 
-                secure_save = SecureMusicCRUD(**{'music_title': music_title})
-                if secure_save.save_to_dir(music_file) and secure_save.save_to_db():
-                    return redirect(url_for('admin_music_list'))
-                else:
-                    flash('Server error!')
-                    return redirect(url_for('admin_add_music'))
-            except BadRequestKeyError:
-                pass
-        else:
-            flash('The music file must be .mp3!')
-            return redirect(url_for('admin_add_music'))
+                    secure_save = SecureMusicCRUD(**{'music_title': music_title})
+                    if secure_save.save_to_dir(music_file) and secure_save.save_to_db():
+                        return redirect(url_for('admin_music_list'))
+                    else:
+                        flash('Server error!')
+                        return redirect(url_for('admin_add_music'))
+                except BadRequestKeyError:
+                    pass
+            else:
+                flash('The music file must be .mp3!')
+
+        return redirect(url_for('admin_add_music'))
 
     def get_context(self) -> Dict[str, Union[str, AddMusicForm]]:
         context: Dict[str, Union[str, AddMusicForm]] = {'content_title': 'Add music',
@@ -195,7 +197,8 @@ class DeleteMusic(BasePage):
             music_title: BaseQuery = Music.query.filter(Music.id == music_id).first().title
 
             secure_delete_music = SecureMusicCRUD(**{'music_title': music_title})
-            if secure_delete_music.delete_music_file_from_dir() and secure_delete_music.delete_music_from_db(music_id):
+            if secure_delete_music.delete_music_file_from_dir(music_id) and \
+                    secure_delete_music.delete_music_from_db(music_id):
                 return redirect(url_for('admin_music_list'))
             else:
                 flash('Server error!')

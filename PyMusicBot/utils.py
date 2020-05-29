@@ -9,9 +9,7 @@ from werkzeug.utils import secure_filename, escape
 
 
 class SecureMusicCRUD:
-    """CRUD secure implementation for music.
-
-    Note: CRUD - Create, Read, Update, Delete."""
+    """CRUD secure implementation for music."""
     def __init__(self, **kwargs) -> None:
         """
         :param kwargs['music_title']: title of music
@@ -67,8 +65,11 @@ class SecureMusicCRUD:
         except SQLAlchemyError:
             return False
 
-    def delete_music_file_from_dir(self) -> bool:
-        path_to_music = f'{self.media_root}/{secure_filename(self.music_title)}'
+    @staticmethod
+    def delete_music_file_from_dir(music_id) -> bool:
+        music = Music.query.filter_by(id=music_id).first()
+        path_to_music = music.path_to_file
+
         if os.path.exists(path_to_music):
             os.remove(path_to_music)
 

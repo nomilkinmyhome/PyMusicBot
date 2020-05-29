@@ -1,33 +1,50 @@
 import pytest
 
-from PyMusicBot import create_app, db
-from PyMusicBot.models import User
+from .db import DB
+from .authorization_controller import AuthorizationController
+
+from PyMusicBot import create_app
 from PyMusicBot.routes import init_routes
 
 
-def init_db():
-    db.create_all()
-
-    user1 = User(name='user1')
-    user1.set_password('very_bad_password')
-
-    db.session.add(user1)
-    db.session.commit()
-
-
-def drop_db():
-    db.drop_all()
-
-
-@pytest.fixture()
+@pytest.fixture(scope='module')
 def test_client():
     app = create_app(test_mode=True)
     init_routes(app)
 
     with app.test_client() as test_client:
         with app.app_context():
-            init_db()
+            DB.init()
 
         yield test_client
 
-        drop_db()
+        DB.drop()
+
+
+@pytest.fixture()
+def correct_auth_response(test_client):
+    response = AuthorizationController.login(test_client, 'user1', 'very_bad_password')
+
+    yield response
+
+    AuthorizationController.logout(test_client)
+
+
+@pytest.fixture()
+def incorrect_auth_response(test_client):
+    yield AuthorizationController.login(test_client, 'nonexistent_user', 'very_bad_password')
+
+
+@pytest.fixture(scope='session')
+def media_tmpdir(tmpdir_factory):
+    return tmpdir_factory.mktemp('media')
+
+
+@pytest.fixture(scope='session')
+def music_file(media_tmpdir):
+    return media_tmpdir.join('test_music.mp3')
+
+
+@pytest.fixture(scope='session')
+def bad_file(media_tmpdir):
+    return media_tmpdir.join('bad_file.sh')
