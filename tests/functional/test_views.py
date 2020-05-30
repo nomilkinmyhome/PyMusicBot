@@ -10,11 +10,11 @@ class TestAuthPage:
         assert b'PyMusicBot' in response.data
         assert b'Log in' in response.data
 
-    def test_incorrect_user_auth(self, test_client, incorrect_auth_response):
+    def test_incorrect_user_auth(self, incorrect_auth_response):
         assert b'Incorrect login or password!' in incorrect_auth_response.data
         assert b'Admin Page' not in incorrect_auth_response.data
 
-    def test_correct_user_auth(self, test_client, correct_auth_response):
+    def test_correct_user_auth(self, correct_auth_response):
         assert b'logout' in correct_auth_response.data
         assert b'Admin Page' in correct_auth_response.data
         assert b'Incorrect login or password!' not in correct_auth_response.data
@@ -41,7 +41,7 @@ class TestAdminPagesAccess:
 
 class TestAddMusicPage:
     def test_correct_upload(self, test_client, correct_auth_response, music_file):
-        data = {'title': 'test - music.mp3',
+        data = {'title': 'test - music',
                 'music': (io.BytesIO(b'music'), music_file)}
 
         response = test_client.post('/admin/add', data=data, follow_redirects=True, content_type='multipart/form-data')
