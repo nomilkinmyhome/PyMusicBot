@@ -147,9 +147,13 @@ class EditMusic(BasePage):
     def post(self) -> Union[redirect, None]:
         form = EditMusicForm(request.form)
         if form.validate():
-            music_id: str = request.form['id']
-            music_title: str = request.form['title']
-            old_music_title: BaseQuery = Music.query.filter(Music.id == music_id).first().title
+            try:
+                music_id: str = request.form['id']
+                music_title: str = request.form['title']
+                old_music_title: BaseQuery = Music.query.filter(Music.id == music_id).first().title
+            except AttributeError:
+                flash('No music with that ID')
+                return redirect(url_for('admin_edit_music'))
 
             secure_edit_music = SecureMusicCRUD(**{'music_title': music_title})
             if secure_edit_music.rename_music_file_in_dir(old_music_title) and secure_edit_music.edit_music_in_db(music_id):
@@ -174,8 +178,12 @@ class DeleteMusic(BasePage):
     def post(self) -> redirect:
         form = DeleteMusicForm(request.form)
         if form.validate():
-            music_id: str = request.form['id']
-            music_title: BaseQuery = Music.query.filter(Music.id == music_id).first().title
+            try:
+                music_id: str = request.form['id']
+                music_title: BaseQuery = Music.query.filter(Music.id == music_id).first().title
+            except AttributeError:
+                flash('No music with that ID')
+                return redirect(url_for('admin_delete_music'))
 
             secure_delete_music = SecureMusicCRUD(**{'music_title': music_title})
             if secure_delete_music.delete_music_file_from_dir(music_id) and \
