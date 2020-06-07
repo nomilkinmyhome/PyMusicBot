@@ -30,6 +30,9 @@ class SecureMusicCRUD:
             self.music_title: str = f'{self.music_title}.mp3'
 
     def save_to_dir(self, music_file) -> bool:
+        if music_file is None:
+            return False
+
         music_file.save(f'{self.media_root}/{secure_filename(self.music_title)}')
 
         return True

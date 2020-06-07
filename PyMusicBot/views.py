@@ -15,11 +15,8 @@ from typing import Union, Dict
 
 
 class BasePage(MethodView):
-    """Interface for all pages of the site"""
-
     decorators: list = [login_required]
-
-    template: str = 'music_list.html'
+    template: str = ''
 
     def get(self) -> Union[redirect, render_template]:
         context: dict = self.get_context()
@@ -35,14 +32,11 @@ class BasePage(MethodView):
         return render_template(self.template, **context)
 
     def get_context(self) -> dict:
-        pass
+        raise NotImplementedError
 
 
 class Auth(BasePage):
-    """Auth page"""
-
     decorators: list = []
-
     template: str = 'auth.html'
 
     def get(self) -> Union[redirect, render_template]:
@@ -55,15 +49,13 @@ class Auth(BasePage):
         form = AuthForm(request.form)
         if form.validate():
             user = User.query.filter_by(name=request.form['login']).first()
-            if user is not None and user.check_password(request.form['password']):
+            if user and user.check_password(request.form['password']):
                 login_user(user, remember=True)
                 return redirect(url_for('admin_music_list'))
             else:
                 flash('Incorrect login or password!')
-                return redirect(url_for('auth'))
-        else:
-            flash('Incorrect data!')
-            return redirect(url_for('auth'))
+
+        return redirect(url_for('auth'))
 
     def get_context(self) -> Dict[str, Union[str, AuthForm]]:
         context: Dict[str, Union[str, AuthForm]] = {'page_title': 'Log in',
@@ -82,9 +74,8 @@ class Logout(View):
 
 
 class MusicList(BasePage):
-    """Music list page"""
-
     decorators = [login_required]
+    template = 'music_list.html'
 
     @staticmethod
     def get_search() -> Union[None, str]:
@@ -123,27 +114,21 @@ class MusicList(BasePage):
 
 
 class AddMusic(BasePage):
-    """Music adding page"""
-
     decorators = [login_required]
     template: str = 'add_music.html'
 
     def post(self) -> redirect:
         form = AddMusicForm(request.files)
-        if form.music.data and form.music.data:
+        if form.music.data:
             if re.search(r'\.mp3$', form.music.data.filename) and form.music.data.mimetype == 'audio/mpeg':
-                try:
-                    music_title: str = request.form['title']
-                    music_file: FileStorage = request.files['music']
+                music_title: str = request.form.get('title', '')
+                music_file: FileStorage = request.files.get('music', None)
 
-                    secure_save = SecureMusicCRUD(**{'music_title': music_title})
-                    if secure_save.save_to_dir(music_file) and secure_save.save_to_db():
-                        return redirect(url_for('admin_music_list'))
-                    else:
-                        flash('Server error!')
-                        return redirect(url_for('admin_add_music'))
-                except BadRequestKeyError:
-                    pass
+                secure_save = SecureMusicCRUD(**{'music_title': music_title})
+                if secure_save.save_to_dir(music_file) and secure_save.save_to_db():
+                    return redirect(url_for('admin_music_list'))
+                else:
+                    flash('Something went wrong...')
             else:
                 flash('The music file must be .mp3!')
 
@@ -157,8 +142,6 @@ class AddMusic(BasePage):
 
 
 class EditMusic(BasePage):
-    """Music editing page"""
-
     template: str = 'edit_music.html'
 
     def post(self) -> Union[redirect, None]:
@@ -173,10 +156,10 @@ class EditMusic(BasePage):
                 return redirect(url_for('admin_music_list'))
             else:
                 flash('Server error!')
-                return redirect(url_for('admin_edit_music'))
         else:
             flash('Incorrect data!')
-            return redirect(url_for('admin_edit_music'))
+
+        return redirect(url_for('admin_edit_music'))
 
     def get_context(self) -> Dict[str, Union[str, EditMusicForm]]:
         context: Dict[str, Union[str, EditMusicForm]] = {'content_title': 'Edit music',
@@ -186,8 +169,6 @@ class EditMusic(BasePage):
 
 
 class DeleteMusic(BasePage):
-    """Music deletion page"""
-
     template: str = 'delete_music.html'
 
     def post(self) -> redirect:
@@ -202,10 +183,10 @@ class DeleteMusic(BasePage):
                 return redirect(url_for('admin_music_list'))
             else:
                 flash('Server error!')
-                return redirect(url_for('admin_delete_music'))
         else:
             flash('Incorrect ID!')
-            return redirect(url_for('admin_delete_music'))
+
+        return redirect(url_for('admin_delete_music'))
 
     def get_context(self) -> Dict[str, Union[str, DeleteMusicForm]]:
         context: Dict[str, Union[str, DeleteMusicForm]] = {'content_title': 'Delete music',
