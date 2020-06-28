@@ -10,6 +10,9 @@ import logging.config
 from .config import logger_config
 
 
+logging.config.dictConfig(logger_config)
+logger = logging.getLogger('app_logger')
+
 db = SQLAlchemy()
 login_manager = LoginManager()
 
@@ -49,6 +52,3 @@ app = create_app()
 Migrate(app, db)
 manager = Manager(app)
 manager.add_command('db', MigrateCommand)
-
-logging.config.dictConfig(logger_config)
-logger = logging.getLogger('app_logger')
