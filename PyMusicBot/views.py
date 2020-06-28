@@ -1,14 +1,11 @@
-import re
-
 from PyMusicBot.models import Music, User
 from PyMusicBot.forms import AddMusicForm, EditMusicForm, DeleteMusicForm, AuthForm
-from PyMusicBot.utils import SecureMusicCRUD
+from PyMusicBot.repositories import SQLAlchemyRepository, MediaDirRepository
 
 from flask import render_template, request, redirect, url_for, flash
 from flask_login import current_user, login_user, login_required, logout_user
 from flask.views import View, MethodView
 
-from werkzeug.exceptions import BadRequestKeyError
 from werkzeug.datastructures import FileStorage
 from flask_sqlalchemy import Pagination, BaseQuery
 from typing import Union, Dict
@@ -120,12 +117,11 @@ class AddMusic(BasePage):
     def post(self) -> redirect:
         form = AddMusicForm(request.files)
         if form.music.data:
-            if re.search(r'\.mp3$', form.music.data.filename) and form.music.data.mimetype == 'audio/mpeg':
+            if form.music.data.filename.endswith('.mp3') and form.music.data.mimetype == 'audio/mpeg':
                 music_title: str = request.form.get('title', '')
                 music_file: FileStorage = request.files.get('music', None)
 
-                secure_save = SecureMusicCRUD(**{'music_title': music_title})
-                if secure_save.save_to_dir(music_file) and secure_save.save_to_db():
+                if MediaDirRepository().save(music_title, music_file) and SQLAlchemyRepository().save(music_title):
                     return redirect(url_for('admin_music_list'))
                 else:
                     flash('Something went wrong...')
@@ -150,13 +146,11 @@ class EditMusic(BasePage):
             try:
                 music_id: str = request.form['id']
                 music_title: str = request.form['title']
-                old_music_title: BaseQuery = Music.query.filter(Music.id == music_id).first().title
             except AttributeError:
                 flash('No music with that ID')
                 return redirect(url_for('admin_edit_music'))
 
-            secure_edit_music = SecureMusicCRUD(**{'music_title': music_title})
-            if secure_edit_music.rename_music_file_in_dir(old_music_title) and secure_edit_music.edit_music_in_db(music_id):
+            if MediaDirRepository().edit(music_title, music_id) and SQLAlchemyRepository().edit(music_title, music_id):
                 return redirect(url_for('admin_music_list'))
             else:
                 flash('Server error!')
@@ -180,14 +174,11 @@ class DeleteMusic(BasePage):
         if form.validate():
             try:
                 music_id: str = request.form['id']
-                music_title: BaseQuery = Music.query.filter(Music.id == music_id).first().title
             except AttributeError:
                 flash('No music with that ID')
                 return redirect(url_for('admin_delete_music'))
 
-            secure_delete_music = SecureMusicCRUD(**{'music_title': music_title})
-            if secure_delete_music.delete_music_file_from_dir(music_id) and \
-                    secure_delete_music.delete_music_from_db(music_id):
+            if MediaDirRepository().delete(music_id) and SQLAlchemyRepository().delete(music_id):
                 return redirect(url_for('admin_music_list'))
             else:
                 flash('Server error!')
