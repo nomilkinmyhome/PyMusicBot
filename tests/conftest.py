@@ -4,13 +4,11 @@ from .db import DB
 from .authorization_controller import AuthorizationController
 
 from PyMusicBot import create_app
-from PyMusicBot.routes import init_routes
 
 
 @pytest.fixture(scope='module')
 def test_client():
     app = create_app(test_mode=True)
-    init_routes(app)
 
     with app.test_client() as test_client:
         with app.app_context():

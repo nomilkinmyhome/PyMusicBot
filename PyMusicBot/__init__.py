@@ -34,6 +34,9 @@ def init_extensions(app, test_mode=False):
         'CACHE_TYPE': 'simple',
     })
 
+    from PyMusicBot.routes import init_routes
+    init_routes(app)
+
     if not test_mode:
         CSRFProtect(app)
 
