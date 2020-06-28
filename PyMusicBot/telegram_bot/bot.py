@@ -1,5 +1,6 @@
 import os
 import sys
+import logging
 
 from dotenv import load_dotenv
 from typing import Union
@@ -17,6 +18,8 @@ if os.path.exists('.env'):
 else:
     print('ERROR: .env file does not exists!')
     sys.exit(1)
+
+logging.basicConfig(level=logging.INFO)
 
 bot = Bot(token=token)
 dp = Dispatcher(bot)

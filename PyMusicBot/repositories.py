@@ -1,6 +1,6 @@
 import os
 
-from PyMusicBot import db
+from PyMusicBot import db, logger
 from PyMusicBot.models import Music
 
 from werkzeug.utils import secure_filename, escape
@@ -20,6 +20,7 @@ class BaseRepository:
 
             return music_title
         else:
+            logger.error('The title is too long')
             raise NameError('The title is too long')
 
     @staticmethod

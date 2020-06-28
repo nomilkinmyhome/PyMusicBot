@@ -1,3 +1,4 @@
+from PyMusicBot import logger
 from PyMusicBot.models import Music, User
 from PyMusicBot.forms import AddMusicForm, EditMusicForm, DeleteMusicForm, AuthForm
 from PyMusicBot.repositories import SQLAlchemyRepository, MediaDirRepository
@@ -124,6 +125,7 @@ class AddMusic(BasePage):
                 if MediaDirRepository().save(music_title, music_file) and SQLAlchemyRepository().save(music_title):
                     return redirect(url_for('admin_music_list'))
                 else:
+                    logger.warning('Unsuccessful attempt to add music')
                     flash('Something went wrong...')
             else:
                 flash('The music file must be .mp3!')
@@ -153,6 +155,7 @@ class EditMusic(BasePage):
             if MediaDirRepository().edit(music_title, music_id) and SQLAlchemyRepository().edit(music_title, music_id):
                 return redirect(url_for('admin_music_list'))
             else:
+                logger.warning('Unsuccessful attempt to edit music')
                 flash('Server error!')
         else:
             flash('Incorrect data!')
@@ -181,6 +184,7 @@ class DeleteMusic(BasePage):
             if MediaDirRepository().delete(music_id) and SQLAlchemyRepository().delete(music_id):
                 return redirect(url_for('admin_music_list'))
             else:
+                logger.warning('Unsuccessful attempt to delete music')
                 flash('Server error!')
         else:
             flash('Incorrect ID!')
