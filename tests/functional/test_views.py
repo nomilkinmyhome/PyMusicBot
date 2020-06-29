@@ -74,25 +74,3 @@ class TestAddMusicPage:
 
         assert b'Music list' not in response.data
         assert b'The music file must be .mp3!' in response.data
-
-
-class TestEditMusicPage:
-    def test_correct_edit(self):
-        pass
-
-    def test_empty_fields(self):
-        pass
-
-    def test_incorrect_music_id(self):
-        pass
-
-
-class TestDeleteMusicPage:
-    def test_correct_delete(self):
-        pass
-
-    def test_empty_fields(self):
-        pass
-
-    def test_incorrect_music_id(self):
-        pass
