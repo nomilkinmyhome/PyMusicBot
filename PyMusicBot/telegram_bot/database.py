@@ -11,7 +11,9 @@ async def get_conn():
 async def get_music(music_title):
     conn = await get_conn()
 
-    try:
-        return await conn.fetch(f'SELECT title, path_to_file FROM music WHERE title iLIKE \'%{music_title}%\'')
-    finally:
-        await conn.close()
+    music = await conn.fetch('''
+        SELECT title, path_to_file FROM music WHERE title iLIKE ($1 || '%')
+    ''', music_title)
+
+    await conn.close()
+    return music
