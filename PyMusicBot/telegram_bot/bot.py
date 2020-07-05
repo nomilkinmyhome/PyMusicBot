@@ -12,7 +12,6 @@ if os.path.exists('.env'):
 
     from PyMusicBot.telegram_bot.keyboards import get_keyboard_with_music_list
     from PyMusicBot.telegram_bot.database import get_music
-    from PyMusicBot.telegram_bot.common import clear_music_title
 
     token: str = os.environ.get('TELEGRAM_BOT_TOKEN')
 else:
@@ -32,7 +31,7 @@ async def start_message(message: types.Message):
 
 @dp.message_handler()
 async def get_music_title(message: types.Message):
-    clean_music_title: str = await clear_music_title(message.text)
+    clean_music_title: str = message.text.translate(message.text.maketrans('', '', '\'%/\\~"--;,?!'))
     music_list: list = await get_music_list(clean_music_title)
 
     if clean_music_title and music_list:
