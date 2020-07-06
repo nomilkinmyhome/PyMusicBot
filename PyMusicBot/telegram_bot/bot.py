@@ -31,10 +31,9 @@ async def start_message(message: types.Message):
 
 @dp.message_handler()
 async def get_music_title(message: types.Message):
-    clean_music_title: str = message.text.translate(message.text.maketrans('', '', '\'%/\\~"--;,?!'))
-    music_list: list = await get_music_list(clean_music_title)
+    music_list: list = await get_music_list(message.text)
 
-    if clean_music_title and music_list:
+    if music_list:
         if len(music_list) == 1:
             await send_music(message.from_user.id, music_list[0]['path_to_file'])
         else:
