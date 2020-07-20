@@ -5,8 +5,6 @@ venv/
 migrations/
 media/
 
-development_settings.cfg
-testing_settings.cfg
 .env
 .coverage
 *.log
