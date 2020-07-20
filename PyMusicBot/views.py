@@ -1,14 +1,12 @@
 from PyMusicBot import logger
-from PyMusicBot.models import Music, User
 from PyMusicBot.forms import AddMusicForm, EditMusicForm, DeleteMusicForm, AuthForm
-from PyMusicBot.repositories import SQLAlchemyRepository, MediaDirRepository
+from PyMusicBot.controllers import authorization, pagination, crud_manager
 
 from flask import render_template, request, redirect, url_for, flash
-from flask_login import current_user, login_user, login_required, logout_user
+from flask_login import current_user, login_required, logout_user
 from flask.views import View, MethodView
 
 from werkzeug.datastructures import FileStorage
-from flask_sqlalchemy import Pagination, BaseQuery
 from typing import Union, Dict
 
 
@@ -46,9 +44,9 @@ class Auth(BasePage):
     def post(self) -> redirect:
         form = AuthForm(request.form)
         if form.validate():
-            user = User.query.filter_by(name=request.form['login']).first()
-            if user and user.check_password(request.form['password']):
-                login_user(user, remember=True)
+            if authorization.by_login(login=request.form['login'],
+                                      password=request.form['password']):
+
                 return redirect(url_for('admin_music_list'))
             else:
                 flash('Incorrect login or password!')
@@ -72,47 +70,22 @@ class Logout(View):
 
 
 class MusicList(BasePage):
-    decorators = [login_required]
-    template = 'music_list.html'
+    decorators: list = [login_required]
+    template: str = 'music_list.html'
 
-    @staticmethod
-    def get_search() -> Union[None, str]:
-        return request.args.get('search')
+    def get_context(self) -> Dict[str, Union[str, None]]:
+        search: Union[str, None] = request.args.get('search')
+        current_page: int = int(request.args.get('page')) if str(request.args.get('page')).isdigit() else 1
 
-    def get_pages(self) -> Pagination:
-        current_page: int = self.get_current_page()
-        music_list: BaseQuery = self.get_music_list()
-
-        return music_list.paginate(page=current_page, per_page=10)
-
-    @staticmethod
-    def get_current_page() -> int:
-        current_page: Union[int, str, None] = request.args.get('page')
-
-        if current_page and current_page.isdigit():
-            current_page = int(current_page)
-        else:
-            current_page = 1
-
-        return current_page
-
-    def get_music_list(self) -> BaseQuery:
-        search: Union[None, str] = self.get_search()
-        if search:
-            return Music.query.filter(Music.title.ilike(f'%{search}%'))
-        else:
-            return Music.query.order_by(Music.pub_date.desc())
-
-    def get_context(self) -> Dict[str, Union[str, Pagination, None]]:
-        context: Dict[str, Union[str, Pagination, None]] = {'content_title': 'Music list',
-                                                            'search': self.get_search(),
-                                                            'pages': self.get_pages()}
+        context: Dict[str, Union[str, None]] = {'content_title': 'Music list',
+                                                'search': search,
+                                                'pages': pagination.get_pages(current_page, search)}
 
         return context
 
 
 class AddMusic(BasePage):
-    decorators = [login_required]
+    decorators: list = [login_required]
     template: str = 'add_music.html'
 
     def post(self) -> redirect:
@@ -122,7 +95,7 @@ class AddMusic(BasePage):
                 music_title: str = request.form.get('title', '')
                 music_file: FileStorage = request.files.get('music', None)
 
-                if MediaDirRepository().save(music_title, music_file) and SQLAlchemyRepository().save(music_title):
+                if crud_manager.save(music_title, music_file):
                     return redirect(url_for('admin_music_list'))
                 else:
                     logger.warning('Unsuccessful attempt to add music')
@@ -146,13 +119,13 @@ class EditMusic(BasePage):
         form = EditMusicForm(request.form)
         if form.validate():
             try:
-                music_id: str = request.form['id']
                 music_title: str = request.form['title']
+                music_id: str = request.form['id']
             except AttributeError:
                 flash('No music with that ID')
                 return redirect(url_for('admin_edit_music'))
 
-            if MediaDirRepository().edit(music_title, music_id) and SQLAlchemyRepository().edit(music_title, music_id):
+            if crud_manager.edit(music_title, music_id):
                 return redirect(url_for('admin_music_list'))
             else:
                 logger.warning('Unsuccessful attempt to edit music')
@@ -181,7 +154,7 @@ class DeleteMusic(BasePage):
                 flash('No music with that ID')
                 return redirect(url_for('admin_delete_music'))
 
-            if MediaDirRepository().delete(music_id) and SQLAlchemyRepository().delete(music_id):
+            if crud_manager.delete(music_id):
                 return redirect(url_for('admin_music_list'))
             else:
                 logger.warning('Unsuccessful attempt to delete music')
