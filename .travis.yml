@@ -6,7 +6,7 @@ services:
   - postgresql
 before_script:
   - psql -c 'CREATE DATABASE music_bot_tests;' -U postgres
-  - psql -c 'CREATE USER music_bot_user --no-password;' -U postgres
+  - psql -c 'CREATE USER music_bot_user --password 1;' -U postgres
   - psql -c 'GRANT ALL ON DATABASE music_bot_tests TO music_bot_user;' -U postgres
 env:
   PyMusicBot_SETTINGS=../test.cfg
