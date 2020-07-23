@@ -1,7 +1,5 @@
 import pytest
-
-from .db import DB
-from .authorization_controller import AuthorizationController
+from .controllers import db, authorization
 
 from PyMusicBot import create_app
 
@@ -12,25 +10,25 @@ def test_client():
 
     with app.test_client() as test_client:
         with app.app_context():
-            DB.init()
+            db.init()
 
         yield test_client
 
-        DB.drop()
+        db.drop()
 
 
 @pytest.fixture()
 def correct_auth_response(test_client):
-    response = AuthorizationController.login(test_client, 'user1', 'very_bad_password')
+    response = authorization.login(test_client, 'user1', 'very_bad_password')
 
     yield response
 
-    AuthorizationController.logout(test_client)
+    authorization.logout(test_client)
 
 
 @pytest.fixture()
 def incorrect_auth_response(test_client):
-    yield AuthorizationController.login(test_client, 'nonexistent_user', 'very_bad_password')
+    yield authorization.login(test_client, 'nonexistent_user', 'very_bad_password')
 
 
 @pytest.fixture(scope='session')
