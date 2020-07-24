@@ -90,18 +90,20 @@ class AddMusic(BasePage):
 
     def post(self) -> redirect:
         form = AddMusicForm(request.files)
-        if form.music.data:
-            if form.music.data.filename.endswith('.mp3') and form.music.data.mimetype == 'audio/mpeg':
-                music_title: str = request.form.get('title', '')
-                music_file: FileStorage = request.files.get('music', None)
+        if form.music.data and form.music.data.filename.endswith('.mp3'):
+            try:
+                music_title: str = request.form['title']
+                music_file: FileStorage = request.files['music']
 
-                if crud_manager.save(music_title, music_file):
-                    return redirect(url_for('admin_music_list'))
-                else:
-                    logger.warning('Unsuccessful attempt to add music')
-                    flash('Something went wrong...')
-            else:
-                flash('The music file must be .mp3!')
+                crud_manager.save(music_title, music_file)
+                return redirect(url_for('admin_music_list'))
+            except KeyError:
+                flash('All fields are required!')
+            except ValueError:
+                logger.error('Unsuccessful attempt to add music: the title is too long!')
+                flash('The title is too long!')
+        else:
+            flash('The music file must be .mp3!')
 
         return redirect(url_for('admin_add_music'))
 
@@ -121,15 +123,12 @@ class EditMusic(BasePage):
             try:
                 music_title: str = request.form['title']
                 music_id: str = request.form['id']
-            except AttributeError:
-                flash('No music with that ID')
-                return redirect(url_for('admin_edit_music'))
 
-            if crud_manager.edit(music_title, music_id):
+                crud_manager.edit(music_title, music_id)
                 return redirect(url_for('admin_music_list'))
-            else:
-                logger.warning('Unsuccessful attempt to edit music')
-                flash('Server error!')
+            except FileNotFoundError:
+                logger.warning('Unsuccessful attempt to edit music: file not found!')
+                flash('File not found!')
         else:
             flash('Incorrect data!')
 
@@ -150,15 +149,12 @@ class DeleteMusic(BasePage):
         if form.validate():
             try:
                 music_id: str = request.form['id']
-            except AttributeError:
-                flash('No music with that ID')
-                return redirect(url_for('admin_delete_music'))
 
-            if crud_manager.delete(music_id):
+                crud_manager.delete(music_id)
                 return redirect(url_for('admin_music_list'))
-            else:
-                logger.warning('Unsuccessful attempt to delete music')
-                flash('Server error!')
+            except FileNotFoundError:
+                logger.warning('Unsuccessful attempt to delete music: file not found!')
+                flash('File not found!')
         else:
             flash('Incorrect ID!')
 
