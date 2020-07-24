@@ -1,13 +1,16 @@
-from PyMusicBot.repositories import SQLAlchemyRepository, MediaDirRepository
+from PyMusicBot.repositories import PostgreSqlRepository, MediaDirRepository
 
 
-def save(music_title, music_file) -> bool:
-    return bool(MediaDirRepository().save(music_title, music_file) and SQLAlchemyRepository().save(music_title))
+def save(music_title, music_file):
+    MediaDirRepository().save(music_title, music_file)
+    PostgreSqlRepository().save(music_title)
 
 
-def edit(music_title, music_id) -> bool:
-    return bool(MediaDirRepository().edit(music_title, music_id) and SQLAlchemyRepository().edit(music_title, music_id))
+def edit(music_title, music_id):
+    MediaDirRepository().edit(music_title, music_id)
+    PostgreSqlRepository().edit(music_title, music_id)
 
 
-def delete(music_id) -> bool:
-    return bool(MediaDirRepository().delete(music_id) and SQLAlchemyRepository().delete(music_id))
+def delete(music_id):
+    MediaDirRepository().delete(music_id)
+    PostgreSqlRepository().delete(music_id)

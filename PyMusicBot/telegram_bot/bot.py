@@ -15,7 +15,7 @@ if os.path.exists('.env'):
 
     token: str = os.environ.get('TELEGRAM_BOT_TOKEN')
 else:
-    print('ERROR: .env file does not exists!')
+    print('ERROR: .env file does not exist!')
     sys.exit(1)
 
 logging.basicConfig(level=logging.INFO)
