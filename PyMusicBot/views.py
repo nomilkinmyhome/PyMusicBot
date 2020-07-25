@@ -64,11 +64,12 @@ class Auth(BasePage):
     def post(self) -> redirect:
         form = AuthForm(request.form)
         if form.validate():
-            if authorization.by_login(login=request.form['login'],
-                                      password=request.form['password']):
+            try:
+                authorization.by_login(login=request.form['login'],
+                                       password=request.form['password'])
 
                 return redirect(url_for('admin_music_list'))
-            else:
+            except ValueError:
                 flash('Incorrect login or password!')
 
         return redirect(url_for('auth'))
