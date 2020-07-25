@@ -1,4 +1,4 @@
-from PyMusicBot.models import Music
+from PyMusicBot.models.music import Music
 
 from flask_sqlalchemy import Pagination, BaseQuery
 

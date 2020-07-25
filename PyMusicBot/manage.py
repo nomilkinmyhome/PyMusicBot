@@ -1,5 +1,5 @@
 from PyMusicBot import manager
-import PyMusicBot.main
+import PyMusicBot.app
 
 if __name__ == '__main__':
     manager.run()
