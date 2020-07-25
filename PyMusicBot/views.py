@@ -1,3 +1,5 @@
+"""This module contains views of all pages of the site"""
+
 from typing import Union, Dict
 import logging.config
 from .config import logger_config
@@ -15,23 +17,37 @@ logger = logging.getLogger('app_logger')
 
 
 class BasePage(MethodView):
+    """Base class for all page classes.
+
+    :var: decorators - list of the decorators
+    :var: template - html-template for rendering
+    """
+
     decorators: list = [login_required]
     template: str = ''
 
     def get(self) -> Union[redirect, render_template]:
-        context: dict = self.get_context()
-        if 'page_title' not in context:
-            context['page_title'] = 'Admin Page'
+        """Get request handler"""
 
+        context: dict = self.get_context()
         return self.render_template(context)
 
     def post(self) -> Union[None, redirect]:
+        """Post request handler"""
+
         pass
 
     def render_template(self, context) -> render_template:
+        """Render method"""
+
         return render_template(self.template, **context)
 
     def get_context(self) -> dict:
+        """Must be overriden.
+
+        :returns: context - dictionary with all required fields for rendering.
+        """
+
         raise NotImplementedError
 
 
@@ -48,18 +64,18 @@ class Auth(BasePage):
     def post(self) -> redirect:
         form = AuthForm(request.form)
         if form.validate():
-            if authorization.by_login(login=request.form['login'],
-                                      password=request.form['password']):
+            try:
+                authorization.by_login(login=request.form['login'],
+                                       password=request.form['password'])
 
                 return redirect(url_for('admin_music_list'))
-            else:
+            except ValueError:
                 flash('Incorrect login or password!')
 
         return redirect(url_for('auth'))
 
     def get_context(self) -> Dict[str, Union[str, AuthForm]]:
-        context: Dict[str, Union[str, AuthForm]] = {'page_title': 'Log in',
-                                                    'auth_form': AuthForm()}
+        context: Dict[str, Union[str, AuthForm]] = {'auth_form': AuthForm()}
 
         return context
 

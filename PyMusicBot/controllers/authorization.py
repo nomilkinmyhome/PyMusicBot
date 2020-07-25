@@ -3,11 +3,10 @@ from flask_login import login_user
 from PyMusicBot.models.user import User
 
 
-def by_login(login: str, password: str) -> bool:
+def by_login(login: str, password: str):
     user = User.query.filter_by(name=login).first()
 
-    if user and user.check_password(password):
-        login_user(user, remember=True)
-        return True
+    if not user or not user.check_password(password):
+        raise ValueError('Incorrect login or password!')
 
-    return False
+    login_user(user, remember=True)

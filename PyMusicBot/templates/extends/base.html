@@ -6,7 +6,7 @@
     <link rel="shortcut icon" href="/static/img/favicon.png" type="image/x-icon">
     <link rel="stylesheet" href="/static/css/style.css">
 {% endcache %}
-    <title>PyMusicBot | {{ page_title }}</title>
+    <title>PyMusicBot | {% if content_title %}{{ content_title }}{% else %} Log in {% endif %}</title>
 </head>
 <body>
     <div class="container">

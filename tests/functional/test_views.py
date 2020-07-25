@@ -12,11 +12,10 @@ class TestAuthPage:
 
     def test_incorrect_user_auth(self, incorrect_auth_response):
         assert b'Incorrect login or password!' in incorrect_auth_response.data
-        assert b'Admin Page' not in incorrect_auth_response.data
 
     def test_correct_user_auth(self, correct_auth_response):
         assert b'logout' in correct_auth_response.data
-        assert b'Admin Page' in correct_auth_response.data
+        assert b'Music list' in correct_auth_response.data
         assert b'Incorrect login or password!' not in correct_auth_response.data
 
 
