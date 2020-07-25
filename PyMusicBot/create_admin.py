@@ -4,6 +4,8 @@ from PyMusicBot.models.user import User
 
 
 def create_admin():
+    """Creates admin in the DB with 'root' login and 'toor' password"""
+
     app = create_app()
 
     with app.app_context():

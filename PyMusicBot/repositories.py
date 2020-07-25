@@ -1,3 +1,5 @@
+"""This module contains all project repositories: PsotgreSQLRepository and MediaDirRepository"""
+
 import os
 
 from werkzeug.utils import secure_filename, escape
@@ -7,11 +9,18 @@ from PyMusicBot.models.music import Music
 
 
 class BaseRepository:
+    """Base class for all repositories"""
+
     def __init__(self):
         self.media_root: str = 'media'
 
     @staticmethod
     def _validate_music_title(music_title):
+        """Validates music title.
+
+        Max title length - 45 symbols.
+        Title must be .mp3"""
+
         if len(music_title) <= 45:
             music_title = escape(music_title)
 
@@ -36,7 +45,9 @@ class BaseRepository:
         raise NotImplementedError
 
 
-class PostgreSqlRepository(BaseRepository):
+class PostgreSQLRepository(BaseRepository):
+    """Database repository"""
+
     def save(self, music_title):
         music_title = self._validate_music_title(music_title)
         music = Music(title=music_title, path_to_file=f'{self.media_root}/{secure_filename(music_title)}')
@@ -60,6 +71,8 @@ class PostgreSqlRepository(BaseRepository):
 
 
 class MediaDirRepository(BaseRepository):
+    """Media directory repository"""
+
     def save(self, music_title, music_file):
         music_title = self._validate_music_title(music_title)
         music_file.save(f'{self.media_root}/{secure_filename(music_title)}')

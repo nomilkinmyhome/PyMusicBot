@@ -1,16 +1,16 @@
-from PyMusicBot.repositories import PostgreSqlRepository, MediaDirRepository
+from PyMusicBot.repositories import PostgreSQLRepository, MediaDirRepository
 
 
 def save(music_title, music_file):
     MediaDirRepository().save(music_title, music_file)
-    PostgreSqlRepository().save(music_title)
+    PostgreSQLRepository().save(music_title)
 
 
 def edit(music_title, music_id):
     MediaDirRepository().edit(music_title, music_id)
-    PostgreSqlRepository().edit(music_title, music_id)
+    PostgreSQLRepository().edit(music_title, music_id)
 
 
 def delete(music_id):
     MediaDirRepository().delete(music_id)
-    PostgreSqlRepository().delete(music_id)
+    PostgreSQLRepository().delete(music_id)
