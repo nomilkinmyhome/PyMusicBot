@@ -1,1 +1,1 @@
-PyMusicBot_SETTINGS=../test.cfg pytest --tb=long --setup-show --basetemp=media --cov=PyMusicBot
+PyMusicBot_SETTINGS=../test.cfg pytest --tb=long --setup-show --basetemp=media --cov=py_music_bot

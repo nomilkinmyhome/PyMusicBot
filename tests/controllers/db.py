@@ -1,5 +1,5 @@
-from PyMusicBot.models import db
-from PyMusicBot.models.user import User
+from py_music_bot.models import db
+from py_music_bot.models.user import User
 
 
 def init():

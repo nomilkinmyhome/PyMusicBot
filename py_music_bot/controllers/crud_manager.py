@@ -1,4 +1,4 @@
-from PyMusicBot.repositories import PostgreSQLRepository, MediaDirRepository
+from py_music_bot.repositories import PostgreSQLRepository, MediaDirRepository
 
 
 def save(music_title, music_file):

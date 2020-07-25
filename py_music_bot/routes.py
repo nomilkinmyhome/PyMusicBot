@@ -1,4 +1,4 @@
-from PyMusicBot.views import Auth, Logout, MusicList, AddMusic, EditMusic, DeleteMusic
+from py_music_bot.views import Auth, Logout, MusicList, AddMusic, EditMusic, DeleteMusic
 
 
 def init_routes(app):

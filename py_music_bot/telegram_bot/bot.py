@@ -9,8 +9,8 @@ from aiogram import Bot, Dispatcher, executor, types
 if os.path.exists('.env'):
     load_dotenv('.env')
 
-    from PyMusicBot.telegram_bot.keyboards import get_keyboard_with_music_list
-    from PyMusicBot.telegram_bot.database import get_music
+    from py_music_bot.telegram_bot.keyboards import get_keyboard_with_music_list
+    from py_music_bot.telegram_bot.database import get_music
 
     token: str = os.environ.get('TELEGRAM_BOT_TOKEN')
 else:

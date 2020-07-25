@@ -1,7 +1,7 @@
 import pytest
 
-from PyMusicBot.models.user import User
-from PyMusicBot.models.music import Music
+from py_music_bot.models.user import User
+from py_music_bot.models.music import Music
 
 
 class TestUserModel:

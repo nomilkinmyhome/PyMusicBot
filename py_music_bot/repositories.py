@@ -4,8 +4,8 @@ import os
 
 from werkzeug.utils import secure_filename, escape
 
-from PyMusicBot.models import db
-from PyMusicBot.models.music import Music
+from py_music_bot.models import db
+from py_music_bot.models.music import Music
 
 
 class BaseRepository:

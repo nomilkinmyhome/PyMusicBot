@@ -1,6 +1,6 @@
 import pytest
 
-from PyMusicBot import create_app
+from py_music_bot import create_app
 from .controllers import db, authorization
 
 
