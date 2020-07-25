@@ -1,4 +1,4 @@
-from PyMusicBot.models import User
+from PyMusicBot.models.user import User
 
 from flask_login import login_user
 

@@ -1,5 +1,6 @@
-from PyMusicBot import create_app, db
-from PyMusicBot.models import User
+from PyMusicBot import create_app
+from PyMusicBot.models import db
+from PyMusicBot.models.user import User
 
 
 def create_admin():

@@ -1,4 +1,3 @@
-from PyMusicBot import logger
 from PyMusicBot.forms import AddMusicForm, EditMusicForm, DeleteMusicForm, AuthForm
 from PyMusicBot.controllers import authorization, pagination, crud_manager
 
@@ -8,6 +7,13 @@ from flask.views import View, MethodView
 
 from werkzeug.datastructures import FileStorage
 from typing import Union, Dict
+
+import logging.config
+from .config import logger_config
+
+
+logging.config.dictConfig(logger_config)
+logger = logging.getLogger('app_logger')
 
 
 class BasePage(MethodView):

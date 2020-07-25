@@ -1,7 +1,7 @@
 import os
 
-from PyMusicBot import db, logger
-from PyMusicBot.models import Music
+from PyMusicBot.models import db
+from PyMusicBot.models.music import Music
 
 from werkzeug.utils import secure_filename, escape
 
