@@ -1,16 +1,14 @@
-from PyMusicBot.forms import AddMusicForm, EditMusicForm, DeleteMusicForm, AuthForm
-from PyMusicBot.controllers import authorization, pagination, crud_manager
+from typing import Union, Dict
+import logging.config
+from .config import logger_config
 
 from flask import render_template, request, redirect, url_for, flash
 from flask_login import current_user, login_required, logout_user
 from flask.views import View, MethodView
-
 from werkzeug.datastructures import FileStorage
-from typing import Union, Dict
 
-import logging.config
-from .config import logger_config
-
+from PyMusicBot.forms import AddMusicForm, EditMusicForm, DeleteMusicForm, AuthForm
+from PyMusicBot.controllers import authorization, pagination, crud_manager
 
 logging.config.dictConfig(logger_config)
 logger = logging.getLogger('app_logger')
@@ -133,7 +131,7 @@ class EditMusic(BasePage):
                 crud_manager.edit(music_title, music_id)
                 return redirect(url_for('admin_music_list'))
             except FileNotFoundError:
-                logger.warning('Unsuccessful attempt to edit music: file not found!')
+                logger.error('Unsuccessful attempt to edit music: file not found!')
                 flash('File not found!')
         else:
             flash('Incorrect data!')
@@ -159,7 +157,7 @@ class DeleteMusic(BasePage):
                 crud_manager.delete(music_id)
                 return redirect(url_for('admin_music_list'))
             except FileNotFoundError:
-                logger.warning('Unsuccessful attempt to delete music: file not found!')
+                logger.error('Unsuccessful attempt to delete music: file not found!')
                 flash('File not found!')
         else:
             flash('Incorrect ID!')

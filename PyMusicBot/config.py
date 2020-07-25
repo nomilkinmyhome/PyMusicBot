@@ -11,7 +11,7 @@ logger_config = {
     'handlers': {
         'app_handler': {
             'class': 'logging.FileHandler',
-            'level': 'INFO',
+            'level': 'ERROR',
             'filename': 'app.log',
             'mode': 'w',
             'formatter': 'app_formatter',

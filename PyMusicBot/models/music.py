@@ -1,7 +1,8 @@
-from . import db
-
 from datetime import datetime
+
 from sqlalchemy.orm import validates
+
+from . import db
 
 
 class Music(db.Model):

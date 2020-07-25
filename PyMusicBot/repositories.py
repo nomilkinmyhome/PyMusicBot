@@ -1,9 +1,9 @@
 import os
 
+from werkzeug.utils import secure_filename, escape
+
 from PyMusicBot.models import db
 from PyMusicBot.models.music import Music
-
-from werkzeug.utils import secure_filename, escape
 
 
 class BaseRepository:

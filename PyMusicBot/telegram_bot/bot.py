@@ -1,10 +1,9 @@
 import os
 import sys
 import logging
-
-from dotenv import load_dotenv
 from typing import Union
 
+from dotenv import load_dotenv
 from aiogram import Bot, Dispatcher, executor, types
 
 if os.path.exists('.env'):
