@@ -1,7 +1,7 @@
 import pytest
-from .controllers import db, authorization
 
 from PyMusicBot import create_app
+from .controllers import db, authorization
 
 
 @pytest.fixture(scope='module')
