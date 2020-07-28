@@ -10,7 +10,7 @@ from flask.views import View, MethodView
 from werkzeug.datastructures import FileStorage
 
 from py_music_bot.forms import AddMusicForm, EditMusicForm, DeleteMusicForm, AuthForm
-from py_music_bot.controllers import authorization, pagination, crud_manager
+from py_music_bot.use_cases import authorization, pagination, crud_manager
 
 logging.config.dictConfig(logger_config)
 logger = logging.getLogger('app_logger')
