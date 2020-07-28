@@ -3,7 +3,7 @@ from flask_wtf.csrf import CSRFProtect
 from flask_caching import Cache
 
 from py_music_bot.routes import init_routes
-from .models import init_db, init_manager
+from .models import init_db
 
 
 def create_app(*args, **kwargs):
@@ -28,11 +28,8 @@ def init_extensions(app, test_mode=False):
 
 
 app = create_app()
-manager = init_manager(app)
-
 
 __all__ = [
     'app',
-    'manager',
     'create_app',
 ]

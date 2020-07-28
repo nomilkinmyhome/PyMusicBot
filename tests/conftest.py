@@ -1,12 +1,14 @@
 import pytest
 
 from py_music_bot import create_app
+from py_music_bot.app import login_manager
 from .controllers import db, authorization
 
 
 @pytest.fixture(scope='module')
 def test_client():
     app = create_app(test_mode=True)
+    login_manager.init_app(app)
 
     with app.test_client() as test_client:
         with app.app_context():

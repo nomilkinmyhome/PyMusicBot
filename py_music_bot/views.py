@@ -83,7 +83,7 @@ class Auth(BasePage):
 class Logout(View):
     decorators: tuple = (login_required,)
 
-    def dispatch_request(self) -> redirect:
+    def dispatch_request(self):
         logout_user()
 
         return redirect(url_for('auth'))
@@ -108,7 +108,7 @@ class AddMusic(BasePage):
     decorators: tuple = (login_required,)
     template: str = 'add_music.html'
 
-    def post(self) -> redirect:
+    def post(self):
         form = AddMusicForm(request.files)
         if form.music.data and form.music.data.filename.endswith('.mp3'):
             try:
@@ -164,7 +164,7 @@ class EditMusic(BasePage):
 class DeleteMusic(BasePage):
     template: str = 'delete_music.html'
 
-    def post(self) -> redirect:
+    def post(self):
         form = DeleteMusicForm(request.form)
         if form.validate():
             try:
