@@ -2,7 +2,7 @@ from flask import Flask
 from flask_wtf.csrf import CSRFProtect
 from flask_caching import Cache
 
-from PyMusicBot.routes import init_routes
+from py_music_bot.routes import init_routes
 from .models import init_db, init_manager
 
 

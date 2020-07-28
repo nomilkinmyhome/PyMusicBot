@@ -1,15 +1,15 @@
-"""This module contains all project repositories: PsotgreSQLRepository and MediaDirRepository"""
+"""This module contains all project interactors: PostgreSQLInteractor and MediaDirInteractor"""
 
 import os
 
 from werkzeug.utils import secure_filename, escape
 
-from PyMusicBot.models import db
-from PyMusicBot.models.music import Music
+from py_music_bot.models import db
+from py_music_bot.models.music import Music
 
 
-class BaseRepository:
-    """Base class for all repositories"""
+class BaseInteractor:
+    """Base class for all interactors"""
 
     def __init__(self):
         self.media_root: str = 'media'
@@ -45,8 +45,8 @@ class BaseRepository:
         raise NotImplementedError
 
 
-class PostgreSQLRepository(BaseRepository):
-    """Database repository"""
+class PostgreSQLInteractor(BaseInteractor):
+    """Database interactor"""
 
     def save(self, music_title):
         music_title = self._validate_music_title(music_title)
@@ -70,8 +70,8 @@ class PostgreSQLRepository(BaseRepository):
         db.session.commit()
 
 
-class MediaDirRepository(BaseRepository):
-    """Media directory repository"""
+class MediaDirInteractor(BaseInteractor):
+    """Media directory interactor"""
 
     def save(self, music_title, music_file):
         music_title = self._validate_music_title(music_title)

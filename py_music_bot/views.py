@@ -9,8 +9,8 @@ from flask_login import current_user, login_required, logout_user
 from flask.views import View, MethodView
 from werkzeug.datastructures import FileStorage
 
-from PyMusicBot.forms import AddMusicForm, EditMusicForm, DeleteMusicForm, AuthForm
-from PyMusicBot.controllers import authorization, pagination, crud_manager
+from py_music_bot.forms import AddMusicForm, EditMusicForm, DeleteMusicForm, AuthForm
+from py_music_bot.use_cases import authorization, pagination, crud_manager
 
 logging.config.dictConfig(logger_config)
 logger = logging.getLogger('app_logger')
@@ -23,16 +23,16 @@ class BasePage(MethodView):
     :var: template - html-template for rendering
     """
 
-    decorators: list = [login_required]
+    decorators: tuple = (login_required,)
     template: str = ''
 
-    def get(self) -> Union[redirect, render_template]:
+    def get(self):
         """Get request handler"""
 
         context: dict = self.get_context()
         return self.render_template(context)
 
-    def post(self) -> Union[None, redirect]:
+    def post(self):
         """Post request handler"""
 
         pass
@@ -52,16 +52,16 @@ class BasePage(MethodView):
 
 
 class Auth(BasePage):
-    decorators: list = []
+    decorators: tuple = ()
     template: str = 'auth.html'
 
-    def get(self) -> Union[redirect, render_template]:
+    def get(self):
         if current_user.is_authenticated:
             return redirect(url_for('admin_music_list'))
 
         return self.render_template(self.get_context())
 
-    def post(self) -> redirect:
+    def post(self):
         form = AuthForm(request.form)
         if form.validate():
             try:
@@ -81,7 +81,7 @@ class Auth(BasePage):
 
 
 class Logout(View):
-    decorators: list = [login_required]
+    decorators: tuple = (login_required,)
 
     def dispatch_request(self) -> redirect:
         logout_user()
@@ -90,7 +90,7 @@ class Logout(View):
 
 
 class MusicList(BasePage):
-    decorators: list = [login_required]
+    decorators: tuple = (login_required,)
     template: str = 'music_list.html'
 
     def get_context(self) -> Dict[str, Union[str, None]]:
@@ -105,7 +105,7 @@ class MusicList(BasePage):
 
 
 class AddMusic(BasePage):
-    decorators: list = [login_required]
+    decorators: tuple = (login_required,)
     template: str = 'add_music.html'
 
     def post(self) -> redirect:
@@ -137,7 +137,7 @@ class AddMusic(BasePage):
 class EditMusic(BasePage):
     template: str = 'edit_music.html'
 
-    def post(self) -> Union[redirect, None]:
+    def post(self):
         form = EditMusicForm(request.form)
         if form.validate():
             try:

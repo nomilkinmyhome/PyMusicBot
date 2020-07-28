@@ -1,6 +1,6 @@
 from flask_login import login_user
 
-from PyMusicBot.models.user import User
+from py_music_bot.models.user import User
 
 
 def by_login(login: str, password: str):

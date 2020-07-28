@@ -1,6 +1,6 @@
 from flask_sqlalchemy import Pagination, BaseQuery
 
-from PyMusicBot.models.music import Music
+from py_music_bot.models.music import Music
 
 
 def get_music_list(search: str) -> BaseQuery:
