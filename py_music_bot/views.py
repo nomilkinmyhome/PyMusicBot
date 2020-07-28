@@ -23,7 +23,7 @@ class BasePage(MethodView):
     :var: template - html-template for rendering
     """
 
-    decorators: list = [login_required]
+    decorators: tuple = (login_required,)
     template: str = ''
 
     def get(self):
@@ -52,7 +52,7 @@ class BasePage(MethodView):
 
 
 class Auth(BasePage):
-    decorators: list = []
+    decorators: tuple = ()
     template: str = 'auth.html'
 
     def get(self):
@@ -81,7 +81,7 @@ class Auth(BasePage):
 
 
 class Logout(View):
-    decorators: list = [login_required]
+    decorators: tuple = (login_required,)
 
     def dispatch_request(self) -> redirect:
         logout_user()
@@ -90,7 +90,7 @@ class Logout(View):
 
 
 class MusicList(BasePage):
-    decorators: list = [login_required]
+    decorators: tuple = (login_required,)
     template: str = 'music_list.html'
 
     def get_context(self) -> Dict[str, Union[str, None]]:
@@ -105,7 +105,7 @@ class MusicList(BasePage):
 
 
 class AddMusic(BasePage):
-    decorators: list = [login_required]
+    decorators: tuple = (login_required,)
     template: str = 'add_music.html'
 
     def post(self) -> redirect:
